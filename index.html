@@ -15,8 +15,8 @@
             --text-color: #EAEAEA;
             --text-muted: #888;
             --border-color: #333;
-            --bot-bubble-bg: #2c2c2e;
-            --user-bubble-bg: #007AFF;
+            /* --user-bubble-bg is now the same as the bot bubble */
+            --user-bubble-bg: #2c2c2e; 
             --placeholder-bg: #3a3a3a;
         }
         body {
@@ -40,16 +40,8 @@
             padding-bottom: 15px;
             margin-bottom: 25px;
         }
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-            color: #FFFFFF;
-        }
-        .header p {
-            margin: 5px 0 0;
-            color: var(--text-muted);
-            font-size: 14px;
-        }
+        .header h1 { margin: 0; font-size: 24px; color: #FFFFFF; }
+        .header p { margin: 5px 0 0; color: var(--text-muted); font-size: 14px; }
         .message {
             display: flex;
             flex-direction: column;
@@ -63,18 +55,19 @@
             overflow-wrap: break-word;
         }
         .user {
-            align-items: flex-end;
+            align-items: flex-end; /* This keeps the bubble aligned to the right */
         }
         .user .bubble {
-            background-color: var(--user-bubble-bg);
-            color: #FFFFFF;
+            background-color: var(--user-bubble-bg); /* CHANGED */
+            color: var(--text-color); /* CHANGED */
             border-bottom-right-radius: 5px;
         }
         .bot {
             align-items: flex-start;
         }
         .bot .bubble {
-            background-color: var(--bot-bubble-bg);
+            background-color: var(--container-bg); /* CHANGED: Blends with the background */
+            border: 1px solid var(--border-color); /* ADDED: To give it definition */
             color: var(--text-color);
             border-bottom-left-radius: 5px;
         }
@@ -84,8 +77,6 @@
             color: var(--text-muted);
             padding: 40px 0;
         }
-
-        /* Special Content Placeholders & Images */
         .message-image {
             width: 100%;
             max-width: 400px;
@@ -101,38 +92,59 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
         }
-        .placeholder-icon {
-            font-size: 24px;
-        }
-        .placeholder-text {
-            font-style: italic;
-            color: var(--text-muted);
-        }
-
-        /* Mermaid Diagram Styling */
+        .placeholder-icon { font-size: 24px; }
+        .placeholder-text { font-style: italic; color: var(--text-muted); }
         .mermaid-diagram-container {
-            background-color: #f0f0f0; /* Light background for contrast */
+            background-color: #f0f0f0;
             padding: 15px;
             border-radius: 8px;
             margin: 10px 0;
             overflow-x: auto;
         }
-
-        /* Styles for Markdown content */
-        .bubble p { margin-top: 0; margin-bottom: 10px; }
+        .bubble p { margin: 0 0 10px; }
         .bubble p:last-child { margin-bottom: 0; }
-        .bubble pre {
+        
+        /* --- NEW STYLES FOR CODE BLOCKS --- */
+        .code-block {
             background-color: #111;
-            padding: 12px;
-            border-radius: 8px;
-            overflow-x: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
             border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin: 10px 0;
+            overflow: hidden;
         }
-        .bubble code {
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+        .code-language {
+            color: #ccc;
+            font-family: monospace;
+        }
+        .copy-btn {
+            background-color: #555;
+            color: #eee;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.2s;
+        }
+        .copy-btn:hover { background-color: #666; }
+        .code-block pre {
+            margin: 0;
+            padding: 12px;
+            overflow-x: auto;
+        }
+        .code-block code {
             font-family: 'Courier New', Courier, monospace;
             font-size: 14px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
     </style>
 </head>
@@ -143,12 +155,34 @@
     </div>
 
     <script>
-        // Initialize Mermaid library with a dark theme
         mermaid.initialize({ startOnLoad: false, theme: 'dark' });
 
+        // --- NEW HELPER FUNCTION TO COPY CODE ---
+        function copyCode(buttonElement, encodedText) {
+            try {
+                const textToCopy = decodeURIComponent(encodedText);
+                navigator.clipboard.writeText(textToCopy);
+                buttonElement.textContent = 'Copied!';
+                setTimeout(() => {
+                    buttonElement.textContent = 'Copy';
+                }, 2000);
+            } catch (err) {
+                buttonElement.textContent = 'Error!';
+                console.error('Failed to copy text: ', err);
+            }
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
         async function fetchAndDisplayChat() {
             const chatContainer = document.getElementById('chat-container');
-
             try {
                 const params = new URLSearchParams(window.location.search);
                 const chatId = params.get('id');
@@ -160,14 +194,12 @@
                 const conversation = await response.json();
                 chatContainer.innerHTML = '';
 
-                // Add header
                 const header = document.createElement('div');
                 header.className = 'header';
                 const timestamp = new Date(conversation.timestamp).toLocaleString();
                 header.innerHTML = `<h1>${conversation.title}</h1><p>Shared on ${timestamp}</p>`;
                 chatContainer.appendChild(header);
                 
-                // Process and render each message
                 conversation.messages.forEach(msg => {
                     if (msg.type === 'welcome') return;
 
@@ -179,21 +211,38 @@
                     
                     let contentHTML = '';
 
-                    // Handle different message types
                     if (msg.type === 'image_generated' && msg.imageUri) {
                         contentHTML = `<img src="${msg.imageUri}" alt="AI Generated Image" class="message-image">`;
                     } else if (msg.imageUri) {
                         contentHTML = `<div class="placeholder"><span class="placeholder-icon">🖼️</span> <span class="placeholder-text">[Image Sent]</span></div>`;
                     } else if (msg.fileInfo) {
-                        contentHTML = `<div class="placeholder"><span class="placeholder-icon">📄</span> <span class="placeholder-text">[File Sent: ${msg.fileInfo.name}]</span></div>`;
+                        contentHTML = `<div class="placeholder"><span class="placeholder-icon">📄</span> <span class="placeholder-text">[File Sent: ${escapeHtml(msg.fileInfo.name)}]</span></div>`;
                     } else if (msg.text) {
-                        // Check for Mermaid diagrams within the text
+                        let processedText = msg.text;
+
+                        // --- NEW: Find and replace ALL code blocks first ---
+                        const codeBlockRegex = /\[CODEBLOCK:(.*?)\]([\s\S]*?)\[\/CODEBLOCK\]/g;
+                        processedText = processedText.replace(codeBlockRegex, (match, language, code) => {
+                            const cleanCode = escapeHtml(code.trim());
+                            const encodedCode = encodeURIComponent(code.trim());
+                            return `
+                                <div class="code-block">
+                                    <div class="code-header">
+                                        <span class="code-language">${language.trim() || 'code'}</span>
+                                        <button class="copy-btn" onclick="copyCode(this, '${encodedCode}')">Copy</button>
+                                    </div>
+                                    <pre><code>${cleanCode}</code></pre>
+                                </div>
+                            `;
+                        });
+
+                        // Now find and replace Mermaid diagrams
                         const mermaidRegex = /\[CODEBLOCK:mermaid\]([\s\S]*?)\[\/CODEBLOCK\]/g;
-                        const textWithDiagrams = msg.text.replace(mermaidRegex, (match, diagramCode) => {
-                            // Replace the code block with a div that Mermaid can render
+                        processedText = processedText.replace(mermaidRegex, (match, diagramCode) => {
                             return `<div class="mermaid-diagram-container"><pre class="mermaid">${diagramCode.trim()}</pre></div>`;
                         });
-                        contentHTML = marked.parse(textWithDiagrams);
+
+                        contentHTML = marked.parse(processedText);
                     } else if (msg.type === 'image_generating') {
                          contentHTML = `<div class="placeholder"><span class="placeholder-icon">⏳</span> <span class="placeholder-text">[AI is generating an image...]</span></div>`;
                     }
@@ -203,9 +252,7 @@
                     chatContainer.appendChild(messageDiv);
                 });
 
-                // After all elements are in the DOM, tell Mermaid to render diagrams
                 await mermaid.run();
-
                 document.title = conversation.title;
 
             } catch (error) {
