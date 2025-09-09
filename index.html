@@ -3,28 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- FAVICON PLACEHOLDER: Replace 'favicon.png' with the path to your icon file -->
+    <link rel="icon" type="image/png" href="favicon.png">
     <title>EyuX Chat Viewer</title>
-    <!-- Library for rendering Markdown -->
+    
+    <!-- External Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- Library for rendering Mermaid Diagrams -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
     <style>
-        :root {
+        /* --- THEME DEFINITIONS --- */
+        :root, body[data-theme="dark"] {
             --bg-color: #121212;
             --container-bg: #1c1c1c;
             --text-color: #EAEAEA;
             --text-muted: #888;
             --border-color: #333;
             --bot-bubble-bg: #1c1c1c;
-            --user-bubble-bg: #2c2c2e;
+            --user-bubble-bg: #333333; /* Your new user bubble color */
             --placeholder-bg: #3a3a3a;
+            --diagram-bg: #f0f0f0;
+            --header-text: #FFFFFF;
         }
+
+        body[data-theme="light"] {
+            --bg-color: #f0f2f5;
+            --container-bg: #ffffff;
+            --text-color: #1c1c1e;
+            --text-muted: #65676b;
+            --border-color: #e0e0e0;
+            --bot-bubble-bg: #FFFFFF;    /* Your requested light AI bubble */
+            --user-bubble-bg: #f5f5f5;   /* Your requested light user bubble */
+            --placeholder-bg: #e5e5ea;
+            --diagram-bg: #f0f0f0;
+            --header-text: #1c1c1e;
+        }
+
+        /* --- BASE STYLES --- */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 15px;
+            transition: background-color 0.3s, color 0.3s;
         }
         .chat-container {
             max-width: 800px;
@@ -33,23 +55,53 @@
             border-radius: 12px;
             padding: 20px;
             background-color: var(--container-bg);
+            transition: background-color 0.3s, border-color 0.3s;
         }
         .header {
+            position: relative; /* Needed for positioning the theme switcher */
             text-align: center;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 15px;
             margin-bottom: 25px;
+            transition: border-color 0.3s;
         }
         .header h1 {
             margin: 0;
             font-size: 24px;
-            color: #FFFFFF;
+            color: var(--header-text);
+            transition: color 0.3s;
         }
         .header p {
             margin: 5px 0 0;
             color: var(--text-muted);
             font-size: 14px;
         }
+
+        /* --- THEME SWITCHER --- */
+        .theme-switcher {
+            position: absolute;
+            top: -5px;
+            right: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-switcher:hover {
+            background-color: rgba(128, 128, 128, 0.1);
+        }
+        .theme-switcher svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-muted);
+        }
+        .icon-sun, .icon-moon { display: none; } /* Hide both by default */
+
+        /* --- MESSAGE BUBBLES --- */
         .message {
             display: flex;
             flex-direction: column;
@@ -61,94 +113,96 @@
             line-height: 1.6;
             max-width: 85%;
             overflow-wrap: break-word;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
-        .user {
-            align-items: flex-end;
-        }
+        .user { align-items: flex-end; }
         .user .bubble {
             background-color: var(--user-bubble-bg);
-            color: #FFFFFF;
+            color: var(--text-color);
             border-bottom-right-radius: 5px;
         }
-        .bot {
-            align-items: flex-start;
-        }
+        .bot { align-items: flex-start; }
         .bot .bubble {
             background-color: var(--bot-bubble-bg);
             color: var(--text-color);
             border-bottom-left-radius: 5px;
         }
         .loading {
-            text-align: center;
-            font-size: 18px;
-            color: var(--text-muted);
-            padding: 40px 0;
+            text-align: center; font-size: 18px; color: var(--text-muted); padding: 40px 0;
         }
 
-        /* Special Content Placeholders & Images */
+        /* --- SPECIAL CONTENT --- */
         .message-image {
-            width: 100%;
-            max-width: 400px;
-            border-radius: 15px;
-            margin-top: 8px;
+            width: 100%; max-width: 400px; border-radius: 15px; margin-top: 8px;
         }
         .placeholder {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background-color: var(--placeholder-bg);
-            padding: 10px 15px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
+            display: flex; align-items: center; gap: 10px; background-color: var(--placeholder-bg);
+            padding: 10px 15px; border-radius: 12px; border: 1px solid var(--border-color);
         }
-        .placeholder-icon {
-            font-size: 24px;
-        }
-        .placeholder-text {
-            font-style: italic;
-            color: var(--text-muted);
-        }
+        .placeholder-icon { font-size: 24px; }
+        .placeholder-text { font-style: italic; color: var(--text-muted); }
 
-        /* Mermaid Diagram Styling */
         .mermaid-diagram-container {
-            background-color: #f0f0f0; /* Light background for contrast */
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
-            overflow-x: auto;
+            background-color: var(--diagram-bg);
+            padding: 15px; border-radius: 8px; margin: 10px 0; overflow-x: auto;
         }
 
-        /* Styles for Markdown content */
-        .bubble p { margin-top: 0; margin-bottom: 10px; }
+        /* --- MARKDOWN --- */
+        .bubble p { margin: 0 0 10px 0; }
         .bubble p:last-child { margin-bottom: 0; }
         .bubble pre {
-            background-color: #111;
-            padding: 12px;
-            border-radius: 8px;
-            overflow-x: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
+            background-color: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 8px;
+            overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;
             border: 1px solid var(--border-color);
         }
-        .bubble code {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
-        }
+        .bubble code { font-family: 'Courier New', Courier, monospace; font-size: 14px; }
     </style>
 </head>
-<body>
+<body data-theme="dark"> <!-- Start in dark mode by default -->
 
     <div id="chat-container" class="chat-container">
         <div class="loading">Loading conversation...</div>
     </div>
 
     <script>
-        // Initialize Mermaid library with a dark theme
-        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+        const chatContainer = document.getElementById('chat-container');
+        const themeSwitch = document.createElement('button');
+        const body = document.body;
 
+        function setupThemeSwitcher() {
+            themeSwitch.className = 'theme-switcher';
+            themeSwitch.id = 'theme-switch';
+            themeSwitch.setAttribute('aria-label', 'Toggle theme');
+            themeSwitch.innerHTML = `
+                <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.64 5.64c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l1.06 1.06c.39.39 1.02.39 1.41 0s.39-1.02 0-1.41L5.64 5.64zm12.73 12.73c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l1.06 1.06c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41l-1.06-1.06zM5.64 18.36l-1.06-1.06c-.39-.39-.39-1.02 0-1.41s1.02-.39 1.41 0l1.06 1.06c.39.39.39 1.02 0 1.41s-1.02.39-1.41 0zM19.43 5.64c.39-.39.39-1.02 0-1.41-.39-.39-1.02-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.02 0 1.41s1.02.39 1.41 0l1.06-1.06z"/></svg>
+                <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.1 12.08c-2.33-4.51-.5-8.48.53-10.07-1.29 1.25-2.27 2.82-2.8 4.48-1.09 3.32.16 6.55 2.27 8.66 2.11 2.11 5.33 3.35 8.65 2.27 1.66-.53 3.24-1.51 4.48-2.8-1.59 1.03-5.56 2.87-10.07.53z"/></svg>
+            `;
+            themeSwitch.addEventListener('click', switchTheme);
+        }
+
+        function applyTheme(theme) {
+            body.setAttribute('data-theme', theme);
+            const sunIcon = themeSwitch.querySelector('.icon-sun');
+            const moonIcon = themeSwitch.querySelector('.icon-moon');
+            sunIcon.style.display = theme === 'light' ? 'block' : 'none';
+            moonIcon.style.display = theme === 'dark' ? 'block' : 'none';
+        }
+
+        async function switchTheme() {
+            const newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Re-render Mermaid diagrams with the new theme
+            document.querySelectorAll('.mermaid').forEach(el => el.removeAttribute('data-processed'));
+            await mermaid.run({
+                nodes: document.querySelectorAll('.mermaid'),
+                suppressErrors: true
+            });
+        }
+        
         async function fetchAndDisplayChat() {
-            const chatContainer = document.getElementById('chat-container');
-
             try {
                 const params = new URLSearchParams(window.location.search);
                 const chatId = params.get('id');
@@ -160,26 +214,23 @@
                 const conversation = await response.json();
                 chatContainer.innerHTML = '';
 
-                // Add header
+                // Add header and theme switcher
                 const header = document.createElement('div');
                 header.className = 'header';
                 const timestamp = new Date(conversation.timestamp).toLocaleString();
                 header.innerHTML = `<h1>${conversation.title}</h1><p>Shared on ${timestamp}</p>`;
+                header.appendChild(themeSwitch); // Add the button to the header
                 chatContainer.appendChild(header);
                 
                 // Process and render each message
                 conversation.messages.forEach(msg => {
                     if (msg.type === 'welcome') return;
-
                     const messageDiv = document.createElement('div');
                     messageDiv.className = `message ${msg.sender}`;
-
                     const bubbleDiv = document.createElement('div');
                     bubbleDiv.className = 'bubble';
-                    
                     let contentHTML = '';
 
-                    // Handle different message types
                     if (msg.type === 'image_generated' && msg.imageUri) {
                         contentHTML = `<img src="${msg.imageUri}" alt="AI Generated Image" class="message-image">`;
                     } else if (msg.imageUri) {
@@ -187,10 +238,8 @@
                     } else if (msg.fileInfo) {
                         contentHTML = `<div class="placeholder"><span class="placeholder-icon">📄</span> <span class="placeholder-text">[File Sent: ${msg.fileInfo.name}]</span></div>`;
                     } else if (msg.text) {
-                        // Check for Mermaid diagrams within the text
                         const mermaidRegex = /\[CODEBLOCK:mermaid\]([\s\S]*?)\[\/CODEBLOCK\]/g;
                         const textWithDiagrams = msg.text.replace(mermaidRegex, (match, diagramCode) => {
-                            // Replace the code block with a div that Mermaid can render
                             return `<div class="mermaid-diagram-container"><pre class="mermaid">${diagramCode.trim()}</pre></div>`;
                         });
                         contentHTML = marked.parse(textWithDiagrams);
@@ -203,8 +252,13 @@
                     chatContainer.appendChild(messageDiv);
                 });
 
-                // After all elements are in the DOM, tell Mermaid to render diagrams
-                await mermaid.run();
+                // Set initial theme for Mermaid
+                const currentTheme = localStorage.getItem('theme') || 'dark';
+                mermaid.initialize({ startOnLoad: false, theme: currentTheme === 'dark' ? 'dark' : 'neutral' });
+                await mermaid.run({
+                    nodes: document.querySelectorAll('.mermaid'),
+                    suppressErrors: true
+                });
 
                 document.title = conversation.title;
 
@@ -214,6 +268,13 @@
             }
         }
 
+        // --- SCRIPT EXECUTION STARTS HERE ---
+        setupThemeSwitcher();
+        
+        // Check for saved theme preference on load
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        applyTheme(savedTheme);
+        
         window.onload = fetchAndDisplayChat;
     </script>
 </body>
