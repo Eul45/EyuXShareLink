@@ -83,7 +83,7 @@
         }
         .bot { align-items: flex-start; }
         .bot .bubble {
-            background-color: var(--bot-bubble-bg); color: var(--text-color); border-bottom-left-radius: 5px;
+            background-color: var(--bot-bubble-bg); color: var(--text-color); border-bottom-left-radius: 5px; border: none;
         }
         .loading {
             text-align: center; font-size: 18px; color: var(--text-muted); padding: 40px 0;
@@ -97,14 +97,9 @@
         }
         .placeholder-icon { font-size: 24px; }
         .placeholder-text { font-style: italic; color: var(--text-muted); }
-
-        /* --- MERMAID DIAGRAM STYLING (Restored old style) --- */
         .mermaid {
-            background-color: #FFFFFF; /* Always a white background */
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
-            text-align: center; /* Center the diagram */
+            background-color: #FFFFFF; padding: 15px; border-radius: 8px;
+            margin: 10px 0; text-align: center; 
         }
 
         /* --- MARKDOWN --- */
@@ -116,6 +111,37 @@
             border: 1px solid var(--border-color);
         }
         .bubble code { font-family: 'Courier New', Courier, monospace; font-size: 14px; }
+
+        /* --- FOOTER STYLES --- */
+        .page-footer {
+            max-width: 800px;
+            margin: 25px auto 0;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        .footer-copyright {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Space between icons */
+        }
+        .social-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease-in-out;
+        }
+        .social-links a:hover {
+            color: var(--text-color); /* Highlight on hover */
+        }
+        .social-links svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor; /* The icon color will match the link color */
+        }
     </style>
 </head>
 <body data-theme="dark">
@@ -123,13 +149,16 @@
     <div id="chat-container" class="chat-container">
         <div class="loading">Loading conversation...</div>
     </div>
+    
+    <!-- Footer will be dynamically inserted here by the script -->
+    <footer id="page-footer" class="page-footer"></footer>
 
     <script>
         const chatContainer = document.getElementById('chat-container');
+        const pageFooter = document.getElementById('page-footer');
         const themeSwitch = document.createElement('button');
         const body = document.body;
 
-        // Initialize Mermaid library ONCE, without a specific theme.
         mermaid.initialize({ startOnLoad: false });
 
         function setupThemeSwitcher() {
@@ -151,12 +180,8 @@
         }
 
         async function renderMermaidDiagrams() {
-            // Set the theme for Mermaid just before rendering
             const currentTheme = body.getAttribute('data-theme');
-            mermaid.mermaidAPI.setConfig({ 
-                theme: currentTheme === 'dark' ? 'dark' : 'default' // 'default' is the classic light theme
-            });
-            // This is crucial for re-rendering on theme switch
+            mermaid.mermaidAPI.setConfig({ theme: currentTheme === 'dark' ? 'dark' : 'default' });
             document.querySelectorAll('.mermaid[data-processed]').forEach(el => el.removeAttribute('data-processed'));
             await mermaid.run({ nodes: document.querySelectorAll('.mermaid'), suppressErrors: true });
         }
@@ -166,6 +191,27 @@
             applyTheme(newTheme);
             localStorage.setItem('theme', newTheme);
             await renderMermaidDiagrams();
+        }
+        
+        function buildFooter() {
+            const currentYear = new Date().getFullYear();
+            pageFooter.innerHTML = `
+                <p class="footer-copyright">&copy; ${currentYear} EyuX AI</p>
+                <div class="social-links">
+                    <a href="https://t.me/Eul_zzz" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+                        <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zM8.755 18.324l-.164-5.224 8.232-4.832-10.02 6.096-3.83-1.188A10.143 10.143 0 0 1 12.001 2c5.522 0 10 4.477 10 10s-4.478 10-10 10a9.986 9.986 0 0 1-5.74-1.697l2.494-.979z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/eyuel_eng" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24"><path d="M12 2c-2.717 0-3.056.01-4.122.06-1.065.05-1.79.22-2.428.46-1.29.5-2.285 1.5-2.785 2.78-.24.64-.41 1.36-.46 2.42C2.01 9.28 2 9.58 2 12s.01 2.72.06 3.78c.05 1.07.22 1.79.46 2.43.5 1.28 1.5 2.28 2.78 2.78.64.24 1.36.41 2.42.46 1.07.05 1.4.06 3.78.06s2.72-.01 3.78-.06c1.07-.05 1.79-.22 2.43-.46 1.28-.5 2.28-1.5 2.78-2.78.24-.64.41-1.36.46-2.42.05-1.07.06-1.4.06-3.78s-.01-2.72-.06-3.78c-.05-1.07-.22-1.79-.46-2.43-.5-1.28-1.5-2.28-2.78-2.78-.64-.24-1.36-.41-2.42-.46C15.056 2.01 14.717 2 12 2zm0 1.8c2.666 0 2.98.01 4.04.06 1.01.05 1.55.2 1.96.37.58.24.97.55 1.38 1 .4.4.75.8 1 1.38.17.4.32.95.37 1.96.05 1.06.06 1.37.06 4.04s-.01 2.98-.06 4.04c-.05 1.01-.2 1.55-.37 1.96-.24.58-.55.97-1 1.38-.4.4-.8.75-1.38 1-.4.17-.95.32-1.96.37-1.06.05-1.37.06-4.04.06s-2.98-.01-4.04-.06c-1.01-.05-1.55-.2-1.96-.37-.58-.24-.97-.55-1.38-1-.4-.4-.75-.8-1-1.38-.17-.4-.32-.95-.37-1.96C4.01 14.98 4 14.67 4 12s.01-2.98.06-4.04c.05-1.01.2-1.55.37-1.96.24-.58.55-.97 1-1.38.4-.4.8-.75 1.38-1 .4-.17.95-.32 1.96-.37C9.02 4.01 9.33 4 12 4zm0 3.25c-2.623 0-4.75 2.127-4.75 4.75S9.377 16.75 12 16.75 16.75 14.623 16.75 12 14.623 7.25 12 7.25zm0 7.7c-1.63 0-2.95-1.32-2.95-2.95s1.32-2.95 2.95-2.95 2.95 1.32 2.95 2.95-1.32 2.95-2.95 2.95zm5.5-8.5c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25z"/></svg>
+                    </a>
+                    <a href="https://github.com/Eul45" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <svg viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.5-1.4-1.3-1.8-1.3-1.8-1-1 .1-1 .1-1 1.1.1 1.7 1.2 1.7 1.2.9 1.6 2.4 1.2 3 .9.1-.7.4-1.2.7-1.5-2.3-.3-4.7-1.1-4.7-5.1 0-1.1.4-2 1-2.8-.1-.3-.4-1.3.1-2.7 0 0 .9-.3 2.8 1 .8-.2 1.7-.3 2.5-.3s1.7.1 2.5.3c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.8 1 1.7 1 2.8 0 4-2.4 4.8-4.7 5.1.4.3.8.9.8 1.8v2.8c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/></svg>
+                    </a>
+                    <a href="https://www.linkedin.com/in/eyuel-engida-77155a317" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24"><path d="M21.1 0H2.9C1.3 0 0 1.3 0 2.9v18.2C0 22.7 1.3 24 2.9 24h18.2c1.6 0 2.9-1.3 2.9-2.9V2.9C24 1.3 22.7 0 21.1 0zM7.1 20.3h-3V8.9h3v11.4zM5.6 7.6c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.8 1.8-1.8 1.8zm13.1 12.7h-3V14c0-1.6-.6-2.7-2-2.7-1.1 0-1.7.7-2 1.4-.1.2-.1.5-.1.8v6.8h-3s.1-10.3 0-11.4h3v1.6c.4-.7 1.4-1.7 2.7-1.7 2 0 3.5 1.3 3.5 4.1v7.4z"/></svg>
+                    </a>
+                </div>
+            `;
         }
         
         async function fetchAndDisplayChat() {
@@ -204,7 +250,6 @@
                     } else if (msg.text) {
                         const mermaidRegex = /\[CODEBLOCK:mermaid\]([\s\S]*?)\[\/CODEBLOCK\]/g;
                         const textWithDiagrams = msg.text.replace(mermaidRegex, (match, diagramCode) => {
-                            // Use a simple <pre> tag. The class "mermaid" is the hook for the library.
                             return `<pre class="mermaid">${diagramCode.trim()}</pre>`;
                         });
                         contentHTML = marked.parse(textWithDiagrams);
@@ -218,6 +263,7 @@
                 });
                 
                 await renderMermaidDiagrams();
+                buildFooter(); // Build the footer after content is loaded
                 document.title = conversation.title;
 
             } catch (error) {
