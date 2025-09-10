@@ -273,9 +273,10 @@
                 buildFooter(); 
                 document.title = conversation.title;
 
-            } catch (error) {
-                chatContainer.innerHTML = `<div class="loading" style="color: #ff5c5c;">Error: ${error.message}</div>`;
-                console.error("Failed to load chat:", error);
+                       } catch (error) {
+                // This is the updated, more user-friendly error message.
+                chatContainer.innerHTML = `<div class="loading" style="color: #ff5c5c;">Error: Failed to fetch conversation.<br>(The server may be overloaded, please try again later)</div>`;
+                console.error("Failed to load chat:", error); // The detailed error is still logged for you
             }
         }
 
