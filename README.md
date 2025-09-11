@@ -19,7 +19,6 @@ The primary goal of this project is to provide a shareable, web-accessible link 
 -   **Markdown & Code Rendering:** Correctly formats text and code blocks sent by the AI.
 -   **Mermaid Diagram Support:** Renders Mermaid.js diagrams directly in the browser.
 -   **Dark/Light Theme:** Includes a theme switcher that saves the user's preference.
--   **Promotional Banner:** Includes a subtle banner to promote the EyuX Android app with a download link.
 
 ### Technologies Used
 
