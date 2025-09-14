@@ -59,16 +59,11 @@
             </div>
         `;
     }
-    
     // This new function creates and adds the meta tags to the <head>
     function updateMetaTags(chatTitle) {
-        // This gets the FULL dynamic URL of the current page!
+        // This gets the FULL dynamic URL of the current page
         const pageUrl = window.location.href; 
-        
-        // !!! IMPORTANT !!! 
-        // your URL with a direct link to your own logo or preview image.
-        const imageUrl = "https://raw.githubusercontent.com/Eul45/EyuXShareLink/643d29d4e4c6f0db76676dec23d8e401a5197894/icon.png"; // This is just an example
-
+        const imageUrl = "https://raw.githubusercontent.com/Eul45/EyuXShareLink/643d29d4e4c6f0db76676dec23d8e401a5197894/icon.png"; 
         const metaInfo = {
             'og:title': `EyuX - Shared Chat`,
             'og:description': 'Shared via EyuX AI',
@@ -80,7 +75,6 @@
             'twitter:description': 'Shared via EyuX AI',
             'twitter:image': imageUrl
         };
-
         for (const key in metaInfo) {
             let meta = document.createElement('meta');
             if (key.startsWith('twitter:')) {
