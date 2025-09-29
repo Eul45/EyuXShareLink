@@ -235,6 +235,7 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            margin-top: 12px;
         }
 
         .interactive-button-group.vertical {
@@ -472,34 +473,63 @@
         });
     }
 
-    // --- NEW FUNCTION TO RENDER INTERACTIVE UI ---
+    // --- REFACTORED FUNCTION TO RETURN A DOM ELEMENT INSTEAD OF A STRING ---
     function renderInteractiveUI(component) {
-        if (!component || !component.type) return '';
+        if (!component || !component.type) return null;
 
-        let componentHtml = '';
         if (component.type === 'button_group') {
-            const layoutClass = component.layout === 'vertical' ? 'vertical' : '';
-            const buttonsHtml = component.buttons.map(button => {
-                const styleClass = button.style || 'secondary'; // Default to secondary
-                return `<button class="interactive-button ${styleClass}" disabled>${button.label}</button>`;
-            }).join('');
-            componentHtml = `<div class="interactive-button-group ${layoutClass}">${buttonsHtml}</div>`;
-        } 
-        else if (component.type === 'poll') {
-            const optionsHtml = component.options.map(option => `
-                <div class="interactive-poll-option">
-                    <span class="poll-radio"></span>
-                    <span class="poll-option-text">${option.label}</span>
-                </div>
-            `).join('');
-            componentHtml = `
-                <div class="interactive-container">
-                    <div class="interactive-poll-title">${component.title}</div>
-                    ${optionsHtml}
-                    <button class="interactive-button primary poll-vote-button" disabled>Vote</button>
-                </div>`;
+            const container = document.createElement('div');
+            container.className = 'interactive-button-group';
+            if (component.layout === 'vertical') {
+                container.classList.add('vertical');
+            }
+
+            component.buttons.forEach(buttonData => {
+                const button = document.createElement('button');
+                button.className = 'interactive-button';
+                button.classList.add(buttonData.style || 'secondary');
+                button.textContent = buttonData.label;
+                button.disabled = true;
+                container.appendChild(button);
+            });
+            return container;
         }
-        return componentHtml;
+
+        if (component.type === 'poll') {
+            const container = document.createElement('div');
+            container.className = 'interactive-container';
+
+            const title = document.createElement('div');
+            title.className = 'interactive-poll-title';
+            title.textContent = component.title;
+            container.appendChild(title);
+
+            component.options.forEach(optionData => {
+                const option = document.createElement('div');
+                option.className = 'interactive-poll-option';
+
+                const radio = document.createElement('span');
+                radio.className = 'poll-radio';
+                option.appendChild(radio);
+
+                const text = document.createElement('span');
+                text.className = 'poll-option-text';
+                text.textContent = optionData.label;
+                option.appendChild(text);
+
+                container.appendChild(option);
+            });
+
+            const voteButton = document.createElement('button');
+            voteButton.className = 'interactive-button primary poll-vote-button';
+            voteButton.textContent = 'Vote';
+            voteButton.disabled = true;
+            container.appendChild(voteButton);
+
+            return container;
+        }
+
+        return null;
     }
 
     async function fetchAndDisplayChat() {
@@ -532,6 +562,22 @@
                 const bubbleDiv = document.createElement('div');
                 bubbleDiv.className = 'bubble';
                 let contentHTML = '';
+                
+                let interactiveComponentData = null;
+                const interactiveUIRegex = /\[INTERACTIVE_UI\]([\s\S]*?)\[\/INTERACTIVE_UI\]/g;
+                const mermaidRegex = /\[CODEBLOCK:mermaid\]([\s\S]*?)\[\/CODEBLOCK\]/g;
+
+                let mainText = msg.text || '';
+
+                // --- NEW LOGIC: Extract UI data first, then remove the tag ---
+                mainText = mainText.replace(interactiveUIRegex, (match, jsonString) => {
+                    try {
+                        interactiveComponentData = JSON.parse(jsonString);
+                    } catch (e) {
+                        console.error("Failed to parse interactive UI JSON", e);
+                    }
+                    return ''; // Remove the tag from the text that goes to the markdown parser
+                });
 
                 if (msg.type === 'image_generated' && msg.imageUri) {
                     contentHTML = `<img src="${msg.imageUri}" alt="AI Generated Image" class="message-image">`;
@@ -539,32 +585,25 @@
                     contentHTML = `<div class="placeholder"><span class="placeholder-icon">🖼️</span> <span class="placeholder-text">[Image Sent]</span></div>`;
                 } else if (msg.fileInfo) {
                     contentHTML = `<div class="placeholder"><span class="placeholder-icon">📄</span> <span class="placeholder-text">[File Sent: ${msg.fileInfo.name}]</span></div>`;
-                } else if (msg.text) {
-                    const mermaidRegex = /\[CODEBLOCK:mermaid\]([\s\S]*?)\[\/CODEBLOCK\]/g;
-                    // --- NEW: Regex for Interactive UI ---
-                    const interactiveUIRegex = /\[INTERACTIVE_UI\]([\s\S]*?)\[\/INTERACTIVE_UI\]/g;
-                    
-                    let processedText = msg.text.replace(mermaidRegex, (match, diagramCode) => {
+                } else if (mainText) {
+                    const textWithDiagrams = mainText.replace(mermaidRegex, (match, diagramCode) => {
                         return `<pre class="mermaid">${diagramCode.trim()}</pre>`;
                     });
-
-                    // --- NEW: Replace UI blocks with rendered HTML ---
-                    processedText = processedText.replace(interactiveUIRegex, (match, jsonString) => {
-                        try {
-                            const componentData = JSON.parse(jsonString);
-                            return renderInteractiveUI(componentData);
-                        } catch (e) {
-                            console.error("Failed to parse interactive UI JSON", e);
-                            return ''; // Don't render if JSON is invalid
-                        }
-                    });
-
-                    contentHTML = marked.parse(processedText);
+                    contentHTML = marked.parse(textWithDiagrams);
                 } else if (msg.type === 'image_generating') {
                      contentHTML = `<div class="placeholder"><span class="placeholder-icon">⏳</span> <span class="placeholder-text">[AI is generating an image...]</span></div>`;
                 }
 
                 bubbleDiv.innerHTML = contentHTML;
+
+                // --- NEW LOGIC: Append the interactive element AFTER processing markdown ---
+                if (interactiveComponentData) {
+                    const uiElement = renderInteractiveUI(interactiveComponentData);
+                    if (uiElement) {
+                        bubbleDiv.appendChild(uiElement);
+                    }
+                }
+                
                 messageDiv.appendChild(bubbleDiv);
                 chatContainer.appendChild(messageDiv);
             });
