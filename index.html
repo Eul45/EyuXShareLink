@@ -1,8 +1,430 @@
-<!doctypehtml><html lang=en><meta charset=UTF-8><meta content="width=device-width,initial-scale=1"name=viewport><link href=favicon.png rel=icon type=image/png><title>EyuX Chat Viewer</title><meta content=website property=og:type><meta content=https://eul45.github.io/EyuXShareLink/ property=og:url><meta content="EyuX - Chat Share"property=og:title><meta content="Shared via EyuX AI"property=og:description><meta content=https://raw.githubusercontent.com/Eul45/EyuXShareLink/643d29d4e4c6f0db76676dec23d8e401a5197894/icon.png property=og:image><meta content=summary name=twitter:card><meta content=https://eul45.github.io/EyuXShareLink/ name=twitter:url><meta content="EyuX - Chat Share"name=twitter:title><meta content="Shared via EyuX AI"name=twitter:description><meta content=https://raw.githubusercontent.com/Eul45/EyuXShareLink/643d29d4e4c6f0db76676dec23d8e401a5197894/icon.png name=twitter:image><script src=https://cdn.jsdelivr.net/npm/marked/marked.min.js></script><script src=https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js></script><script src=https://cdn.jsdelivr.net/npm/chart.js></script><style>:root,body[data-theme=dark]{--bg-color:#121212;--container-bg:#1c1c1c;--text-color:#EAEAEA;--text-muted:#888;--border-color:#333;--bot-bubble-bg:#1c1c1c;--user-bubble-bg:#333333;--placeholder-bg:#3a3a3a;--header-text:#FFFFFF;--link-color:#58a6ff;--interactive-bg:rgba(255, 255, 255, 0.03);--interactive-border:rgba(255, 255, 255, 0.1);--interactive-btn-bg:rgba(255, 255, 255, 0.05);--interactive-btn-border:rgba(255, 255, 255, 0.2);--interactive-btn-primary-bg:#007AFF;--interactive-btn-primary-text:#FFFFFF;--interactive-btn-danger-bg:#FF3B30;--chart-grid-color:rgba(255, 255, 255, 0.1);--chart-label-color:#AAAAAA;--chart-tooltip-bg:#000}body[data-theme=light]{--bg-color:#f0f2f5;--container-bg:#ffffff;--text-color:#1c1c1e;--text-muted:#65676b;--border-color:#e0e0e0;--bot-bubble-bg:#FFFFFF;--user-bubble-bg:#f5f5f5;--placeholder-bg:#e5e5ea;--header-text:#1c1c1e;--link-color:#007AFF;--interactive-bg:rgba(0, 0, 0, 0.02);--interactive-border:rgba(0, 0, 0, 0.08);--interactive-btn-bg:rgba(0, 0, 0, 0.03);--interactive-btn-border:rgba(0, 0, 0, 0.1);--interactive-btn-primary-bg:#007AFF;--interactive-btn-primary-text:#FFFFFF;--interactive-btn-danger-bg:#FF3B30;--chart-grid-color:rgba(0, 0, 0, 0.1);--chart-label-color:#555555;--chart-tooltip-bg:#fff}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background-color:var(--bg-color);color:var(--text-color);margin:0;padding:15px;transition:background-color .3s,color .3s}.chat-container{max-width:800px;margin:0 auto;border:1px solid var(--border-color);border-radius:12px;padding:20px;background-color:var(--container-bg);transition:background-color .3s,border-color .3s}.header{position:relative;text-align:center;border-bottom:1px solid var(--border-color);padding-bottom:15px;margin-bottom:25px;transition:border-color .3s}.header h1{margin:0;font-size:24px;color:var(--header-text);transition:color .3s}.header p{margin:5px 0 0;color:var(--text-muted);font-size:14px}.theme-switcher{position:absolute;top:-5px;right:0;background:0 0;border:none;cursor:pointer;padding:10px;border-radius:50%;display:flex;align-items:center;justify-content:center}.theme-switcher:hover{background-color:rgba(128,128,128,.1)}.theme-switcher svg{width:24px;height:24px;fill:var(--text-muted)}.icon-moon,.icon-sun{display:none}.message{display:flex;flex-direction:column;margin-bottom:20px}.bubble{padding:12px 18px;border-radius:20px;line-height:1.6;max-width:85%;overflow-wrap:break-word;border:1px solid var(--border-color);transition:background-color .3s,color .3s,border-color .3s}.user{align-items:flex-end}.user .bubble{background-color:var(--user-bubble-bg);color:var(--text-color);border-bottom-right-radius:5px}.bot{align-items:flex-start}.bot .bubble{background-color:var(--bot-bubble-bg);color:var(--text-color);border-bottom-left-radius:5px;border:none}.loading{text-align:center;font-size:18px;color:var(--text-muted);padding:40px 0}.message-image{width:100%;max-width:400px;border-radius:15px;margin-top:8px}.placeholder{display:flex;align-items:center;gap:10px;background-color:var(--placeholder-bg);padding:10px 15px;border-radius:12px;border:1px solid var(--border-color)}.placeholder-icon{font-size:24px}.placeholder-text{font-style:italic;color:var(--text-muted)}.mermaid{background-color:#fff;padding:15px;border-radius:8px;margin:10px 0;text-align:center}.bubble p{margin:0 0 10px 0}.bubble p:last-child{margin-bottom:0}.bubble pre{background-color:rgba(0,0,0,.2);padding:12px;border-radius:8px;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word;border:1px solid var(--border-color)}.bubble code{font-family:'Courier New',Courier,monospace;font-size:14px}.interactive-container{margin-top:12px;padding:16px;border-radius:12px;border:1px solid var(--interactive-border);background-color:var(--interactive-bg)}.interactive-button-group{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.interactive-button-group.vertical{flex-direction:column}.interactive-button{padding:10px 16px;border-radius:20px;border:1px solid var(--interactive-btn-border);background-color:var(--interactive-btn-bg);font-size:14px;font-weight:500;cursor:not-allowed;opacity:.7;color:var(--text-color);text-align:center}.interactive-button.primary{background-color:var(--interactive-btn-primary-bg);border-color:var(--interactive-btn-primary-bg);color:var(--interactive-btn-primary-text)}.interactive-button.danger{background-color:var(--interactive-btn-danger-bg);border-color:var(--interactive-btn-danger-bg);color:var(--interactive-btn-primary-text)}.interactive-button-group.vertical .interactive-button{width:100%;box-sizing:border-box}.interactive-poll-title{font-size:16px;font-weight:600;margin-bottom:12px;color:var(--text-color)}.interactive-poll-option{display:flex;align-items:center;padding:12px;margin:4px 0;border-radius:8px;border:1px solid var(--interactive-btn-border);background-color:var(--interactive-btn-bg);cursor:not-allowed;opacity:.7}.poll-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--text-muted);margin-right:12px}.poll-option-text{font-size:14px;color:var(--text-color)}.poll-vote-button{margin-top:12px;width:100%;box-sizing:border-box}.promo-note{text-align:center;padding:15px 10px;margin-top:30px;border-top:1px solid var(--border-color);font-size:14px;color:var(--text-muted);line-height:1.5}.promo-note a{color:var(--link-color);font-weight:600;text-decoration:none}.promo-note a:hover{text-decoration:underline}.page-footer{max-width:800px;margin:25px auto 0;padding:20px;text-align:center;color:var(--text-muted)}.footer-copyright{font-size:14px;margin-bottom:15px}.social-links{display:flex;justify-content:center;gap:20px}.social-links a{color:var(--text-muted);text-decoration:none;transition:color .2s ease-in-out}.social-links a:hover{color:var(--text-color)}.social-links svg{width:24px;height:24px;fill:currentColor}.copy-note{margin:2px 0 0;font-size:12px;color:var(--text-muted);font-style:italic}.chart-title{font-size:16px;font-weight:600;color:var(--text-color);margin-bottom:10px;text-align:center}.chart-scroll-container{overflow-x:auto;margin:10px 0}.chart-render-area{position:relative}</style><body data-theme=dark><div class=chat-container id=chat-container><div class=loading>Loading conversation...</div></div><footer class=page-footer id=page-footer></footer><script>const chatContainer = document.getElementById('chat-container');
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>EyuX Chat Viewer</title>
+
+    <!-- OG Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://eul45.github.io/EyuXShareLink/">
+    <meta property="og:title" content="EyuX - Chat Share">
+    <meta property="og:description" content="Shared via EyuX AI">
+    <meta property="og:image" content="https://raw.githubusercontent.com/Eul45/EyuXShareLink/643d29d4e4c6f0db76676dec23d8e401a5197894/icon.png">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:url" content="https://eul45.github.io/EyuXShareLink/">
+    <meta name="twitter:title" content="EyuX - Chat Share">
+    <meta name="twitter:description" content="Shared via EyuX AI">
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/Eul45/EyuXShareLink/643d29d4e4c6f0db76676dec23d8e401a5197894/icon.png">
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+    <style>
+        :root, body[data-theme="dark"] {
+            --bg-color: #121212;
+            --container-bg: #1c1c1c;
+            --text-color: #EAEAEA;
+            --text-muted: #888;
+            --border-color: #333;
+            --bot-bubble-bg: #1c1c1c;
+            --user-bubble-bg: #333333;
+            --placeholder-bg: #3a3a3a;
+            --header-text: #FFFFFF;
+            --link-color: #58a6ff;
+            --interactive-bg: rgba(255, 255, 255, 0.03);
+            --interactive-border: rgba(255, 255, 255, 0.1);
+            --interactive-btn-bg: rgba(255, 255, 255, 0.05);
+            --interactive-btn-border: rgba(255, 255, 255, 0.2);
+            --interactive-btn-primary-bg: #007AFF;
+            --interactive-btn-primary-text: #FFFFFF;
+            --interactive-btn-danger-bg: #FF3B30;
+        }
+
+        body[data-theme="light"] {
+            --bg-color: #f0f2f5;
+            --container-bg: #ffffff;
+            --text-color: #1c1c1e;
+            --text-muted: #65676b;
+            --border-color: #e0e0e0;
+            --bot-bubble-bg: #FFFFFF;
+            --user-bubble-bg: #f5f5f5;
+            --placeholder-bg: #e5e5ea;
+            --header-text: #1c1c1e;
+            --link-color: #007AFF;
+            --interactive-bg: rgba(0, 0, 0, 0.02);
+            --interactive-border: rgba(0, 0, 0, 0.08);
+            --interactive-btn-bg: rgba(0, 0, 0, 0.03);
+            --interactive-btn-border: rgba(0, 0, 0, 0.1);
+            --interactive-btn-primary-bg: #007AFF;
+            --interactive-btn-primary-text: #FFFFFF;
+            --interactive-btn-danger-bg: #FF3B30;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 15px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            background-color: var(--container-bg);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .header {
+            position: relative;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            transition: border-color 0.3s;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: var(--header-text);
+            transition: color 0.3s;
+        }
+        .header p {
+            margin: 5px 0 0;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .theme-switcher {
+            position: absolute;
+            top: -5px;
+            right: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-switcher:hover { background-color: rgba(128, 128, 128, 0.1); }
+        .theme-switcher svg { width: 24px; height: 24px; fill: var(--text-muted); }
+        .icon-moon, .icon-sun { display: none; }
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        .bubble {
+            padding: 12px 18px;
+            border-radius: 20px;
+            line-height: 1.6;
+            max-width: 85%;
+            overflow-wrap: break-word;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        .user { align-items: flex-end; }
+        .user .bubble {
+            background-color: var(--user-bubble-bg);
+            color: var(--text-color);
+            border-bottom-right-radius: 5px;
+        }
+        .bot { align-items: flex-start; }
+        .bot .bubble {
+            background-color: var(--bot-bubble-bg);
+            color: var(--text-color);
+            border-bottom-left-radius: 5px;
+            border: none;
+        }
+        .loading {
+            text-align: center;
+            font-size: 18px;
+            color: var(--text-muted);
+            padding: 40px 0;
+        }
+        
+        .message-image {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 15px;
+            margin-top: 8px;
+        }
+
+        .placeholder {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--placeholder-bg);
+            padding: 10px 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .placeholder-icon { font-size: 24px; }
+        .placeholder-text { font-style: italic; color: var(--text-muted); }
+
+        .mermaid {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .bubble p { margin: 0 0 10px 0; }
+        .bubble p:last-child { margin-bottom: 0; }
+        .bubble pre {
+            background-color: rgba(0,0,0,0.2);
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border: 1px solid var(--border-color);
+        }
+        .bubble code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+
+        .interactive-container {
+            margin-top: 12px;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--interactive-border);
+            background-color: var(--interactive-bg);
+        }
+        .interactive-button-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .interactive-button-group.vertical { flex-direction: column; }
+        .interactive-button {
+            padding: 10px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--interactive-btn-border);
+            background-color: var(--interactive-btn-bg);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: not-allowed;
+            opacity: 0.7;
+            color: var(--text-color);
+            text-align: center;
+        }
+        .interactive-button.primary {
+            background-color: var(--interactive-btn-primary-bg);
+            border-color: var(--interactive-btn-primary-bg);
+            color: var(--interactive-btn-primary-text);
+        }
+        .interactive-button.danger {
+            background-color: var(--interactive-btn-danger-bg);
+            border-color: var(--interactive-btn-danger-bg);
+            color: var(--interactive-btn-primary-text);
+        }
+        .interactive-button-group.vertical .interactive-button {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .interactive-poll-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-color);
+        }
+        .interactive-poll-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin: 4px 0;
+            border-radius: 8px;
+            border: 1px solid var(--interactive-btn-border);
+            background-color: var(--interactive-btn-bg);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .poll-radio {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--text-muted);
+            margin-right: 12px;
+        }
+        .poll-option-text {
+            font-size: 14px;
+            color: var(--text-color);
+        }
+        .poll-vote-button {
+            margin-top: 12px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .promo-note {
+            text-align: center;
+            padding: 15px 10px;
+            margin-top: 30px;
+            border-top: 1px solid var(--border-color);
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+        .promo-note a {
+            color: var(--link-color);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .promo-note a:hover { text-decoration: underline; }
+
+        .page-footer {
+            max-width: 800px;
+            margin: 25px auto 0;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        .footer-copyright { font-size: 14px; margin-bottom: 15px; }
+        .social-links { display: flex; justify-content: center; gap: 20px; }
+        .social-links a { color: var(--text-muted); text-decoration: none; transition: color .2s ease-in-out; }
+        .social-links a:hover { color: var(--text-color); }
+        .social-links svg { width: 24px; height: 24px; fill: currentColor; }
+        
+        .copy-note {
+            margin: 2px 0 0;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* --- ADDED: Styles for Web Search Results --- */
+        .sources-container {
+            margin-top: 12px;
+        }
+        .sources-header {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .sources-scroll-wrapper {
+            overflow-x: auto;
+            padding-bottom: 10px;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+        .source-card {
+            display: inline-flex;
+            flex-direction: column;
+            width: 220px;
+            height: 110px;
+            border-radius: 12px;
+            margin-right: 12px;
+            padding: 12px;
+            background-color: var(--interactive-bg);
+            border: 1px solid var(--interactive-border);
+            vertical-align: top;
+            text-decoration: none;
+            transition: background-color .2s, border-color .2s;
+            position: relative;
+            white-space: normal;
+        }
+        .source-card:hover {
+            background-color: var(--interactive-btn-bg);
+            border-color: var(--interactive-btn-border);
+        }
+        .source-card-favicon {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            background-color: var(--placeholder-bg);
+        }
+        .source-card-text {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        .source-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;  
+            overflow: hidden;
+            line-height: 1.4;
+        }
+        .source-card-domain {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .source-card-index {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--interactive-btn-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+        .citation-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--interactive-btn-bg);
+            border: 1px solid var(--interactive-btn-border);
+            color: var(--text-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            margin: 0 2px;
+            vertical-align: middle;
+            transform: translateY(-1px);
+            transition: background-color .2s;
+        }
+        .citation-badge:hover {
+            background-color: var(--interactive-btn-border);
+        }
+        /* --- End of Added Styles --- */
+
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div id="chat-container" class="chat-container">
+        <div class="loading">Loading conversation...</div>
+    </div>
+
+    <footer id="page-footer" class="page-footer"></footer>
+    
+    <script>
+        const chatContainer = document.getElementById('chat-container');
         const pageFooter = document.getElementById('page-footer');
         const themeSwitch = document.createElement('button');
         const body = document.body;
-        let activeCharts = []; // ADDED: To keep track of created charts
 
         mermaid.initialize({ startOnLoad: false });
 
@@ -30,138 +452,12 @@
             document.querySelectorAll('.mermaid[data-processed]').forEach(el => el.removeAttribute('data-processed'));
             await mermaid.run({ nodes: document.querySelectorAll('.mermaid'), suppressErrors: true });
         }
-        
-        // ADDED: New function to render charts
-        function renderDataChart(canvasId, chartJson) {
-            const ctx = document.getElementById(canvasId);
-            if (!ctx) return;
-
-            const currentTheme = body.getAttribute('data-theme');
-            const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-grid-color').trim();
-            const labelColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-label-color').trim();
-            const tooltipBg = getComputedStyle(document.documentElement).getPropertyValue('--chart-tooltip-bg').trim();
-            
-            const chartData = JSON.parse(chartJson);
-            const labels = chartData.data.map(d => d.label);
-            const values = chartData.data.map(d => d.value);
-
-            let chartConfig;
-
-            const pieColors = ['#8B2BE2', '#FF6B6B', '#4ECDC4', '#FFD93D', '#6BCF7F', '#FF8A5B', '#95E1D3', '#F38181', '#AA96DA', '#FCBAD3'];
-
-            switch(chartData.type) {
-                case 'pie':
-                    chartConfig = {
-                        type: 'pie',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: chartData.title || '',
-                                data: values,
-                                backgroundColor: pieColors,
-                                borderWidth: 2,
-                                borderColor: currentTheme === 'dark' ? '#1c1c1c' : '#ffffff',
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: { position: 'top', labels: { color: labelColor } },
-                                title: { display: false },
-                                tooltip: { backgroundColor: tooltipBg, titleColor: labelColor, bodyColor: labelColor }
-                            }
-                        }
-                    };
-                    break;
-                case 'bar':
-                    chartConfig = {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: chartData.title || '',
-                                data: values,
-                                backgroundColor: 'rgba(139, 43, 226, 0.6)',
-                                borderColor: 'rgba(139, 43, 226, 1)',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { display: false },
-                                title: { display: false },
-                                tooltip: { backgroundColor: tooltipBg, titleColor: labelColor, bodyColor: labelColor }
-                            },
-                            scales: {
-                                y: { ticks: { color: labelColor }, grid: { color: gridColor } },
-                                x: { ticks: { color: labelColor }, grid: { color: 'transparent' } }
-                            }
-                        }
-                    };
-                    break;
-                case 'line':
-                    chartConfig = {
-                        type: 'line',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: chartData.title || '',
-                                data: values,
-                                fill: true,
-                                backgroundColor: 'rgba(0, 122, 255, 0.1)',
-                                borderColor: 'rgba(0, 122, 255, 1)',
-                                tension: 0.3
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { display: false },
-                                title: { display: false },
-                                tooltip: { backgroundColor: tooltipBg, titleColor: labelColor, bodyColor: labelColor }
-                            },
-                            scales: {
-                                y: { ticks: { color: labelColor }, grid: { color: gridColor } },
-                                x: { ticks: { color: labelColor }, grid: { color: 'transparent' } }
-                            }
-                        }
-                    };
-                    break;
-            }
-
-            if (chartConfig) {
-                const chartInstance = new Chart(ctx, chartConfig);
-                activeCharts.push(chartInstance); // Store the instance
-            }
-        }
 
         async function switchTheme() {
             const newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             applyTheme(newTheme);
             localStorage.setItem('theme', newTheme);
             await renderMermaidDiagrams();
-            // ADDED: Update chart colors on theme switch
-            const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-grid-color').trim();
-            const labelColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-label-color').trim();
-            const tooltipBg = getComputedStyle(document.documentElement).getPropertyValue('--chart-tooltip-bg').trim();
-            const borderColor = newTheme === 'dark' ? '#1c1c1c' : '#ffffff';
-
-            activeCharts.forEach(chart => {
-                if (chart.config.type === 'pie') {
-                    chart.options.plugins.legend.labels.color = labelColor;
-                    chart.options.plugins.tooltip.backgroundColor = tooltipBg;
-                    chart.data.datasets[0].borderColor = borderColor;
-                } else {
-                    chart.options.scales.y.ticks.color = labelColor;
-                    chart.options.scales.x.ticks.color = labelColor;
-                    chart.options.scales.y.grid.color = gridColor;
-                    chart.options.plugins.tooltip.backgroundColor = tooltipBg;
-                }
-                chart.update();
-            });
         }
         
         function buildPromoBanner() {
@@ -246,6 +542,70 @@
             return null;
         }
 
+        // ADDED: New function to style search results
+        function enhanceWebSearchResults(bubbleElement) {
+            const sourcesHeading = Array.from(bubbleElement.querySelectorAll('strong')).find(el => el.textContent.trim().toLowerCase() === 'sources');
+            if (!sourcesHeading) return;
+
+            const sourceList = sourcesHeading.parentElement.nextElementSibling;
+            if (!sourceList || sourceList.tagName !== 'UL') return;
+
+            sourcesHeading.parentElement.style.display = 'none';
+            sourceList.style.display = 'none';
+            
+            const sourcesContainer = document.createElement('div');
+            sourcesContainer.className = 'sources-container';
+            sourcesContainer.innerHTML = `<div class="sources-header">SOURCES</div>`;
+            const scrollWrapper = document.createElement('div');
+            scrollWrapper.className = 'sources-scroll-wrapper';
+            sourcesContainer.appendChild(scrollWrapper);
+
+            const sourceLinks = Array.from(sourceList.querySelectorAll('li a'));
+            const sourceUrls = [];
+
+            sourceLinks.forEach((link, index) => {
+                const url = link.href;
+                const title = link.textContent;
+                const domain = new URL(url).hostname.replace('www.', '');
+                const faviconUrl = `https://www.google.com/s2/favicons?sz=64&domain_url=${domain}`;
+                sourceUrls.push(url);
+
+                const card = document.createElement('a');
+                card.className = 'source-card';
+                card.href = url;
+                card.target = '_blank';
+                card.rel = 'noopener noreferrer';
+
+                card.innerHTML = `
+                    <img src="${faviconUrl}" alt="" class="source-card-favicon" onerror="this.style.display='none'">
+                    <div class="source-card-text">
+                        <div class="source-card-title">${title}</div>
+                        <div class="source-card-domain">${domain}</div>
+                    </div>
+                    <div class="source-card-index">${index + 1}</div>
+                `;
+                scrollWrapper.appendChild(card);
+            });
+
+            bubbleElement.appendChild(sourcesContainer);
+
+            const paragraphs = bubbleElement.querySelectorAll('p');
+            paragraphs.forEach(p => {
+                p.innerHTML = p.innerHTML.replace(/\[([\d,\s]+)\]/g, (match, numbers) => {
+                    const indices = numbers.split(',').map(n => parseInt(n.trim(), 10));
+                    let badgesHtml = '';
+                    indices.forEach(index => {
+                        if (!isNaN(index) && index > 0 && index <= sourceUrls.length) {
+                            const url = sourceUrls[index - 1];
+                            badgesHtml += `<a href="${url}" target="_blank" rel="noopener noreferrer" class="citation-badge">${index}</a>`;
+                        }
+                    });
+                    return badgesHtml || match;
+                });
+            });
+        }
+
+
         async function fetchAndDisplayChat() {
             try {
                 const params = new URLSearchParams(window.location.search);
@@ -260,7 +620,6 @@
                 updateMetaTags(conversation.title);
 
                 chatContainer.innerHTML = '';
-                activeCharts = []; // Reset charts array
 
                 const header = document.createElement('div');
                 header.className = 'header';
@@ -269,7 +628,7 @@
                 header.appendChild(themeSwitch);
                 chatContainer.appendChild(header);
                 
-                conversation.messages.forEach((msg, index) => {
+                conversation.messages.forEach(msg => {
                     if (msg.type === 'welcome') return;
 
                     const messageDiv = document.createElement('div');
@@ -280,33 +639,16 @@
                     let interactiveComponentData = null;
                     const interactiveUIRegex = /\[INTERACTIVE_UI\]([\s\S]*?)\[\/INTERACTIVE_UI\]/g;
                     const mermaidRegex = /\[CODEBLOCK:mermaid\]([\s\S]*?)\[\/CODEBLOCK\]/g;
-                    // ADDED: Regex for charts
-                    const dataChartRegex = /\[DATA_CHART\]([\s\S]*?)\[\/DATA_CHART\]/g;
 
                     let mainText = msg.text || '';
 
                     mainText = mainText.replace(interactiveUIRegex, (match, jsonString) => {
-                        try { interactiveComponentData = JSON.parse(jsonString); } catch (e) { console.error("Failed to parse interactive UI JSON", e); }
-                        return ''; 
-                    });
-                    
-                    // ADDED: Logic to replace chart tags with placeholders
-                    mainText = mainText.replace(dataChartRegex, (match, jsonString) => {
-                        const chartId = `chart-${index}`;
-                        const chartData = JSON.parse(jsonString);
-
-                        let chartHtml = `<div class="chart-title">${chartData.title || ''}</div>`;
-                        
-                        if (chartData.type === 'line' || chartData.type === 'bar') {
-                            const minWidth = chartData.data.length * 60; // Calculate min-width for scrolling
-                             chartHtml += `<div class="chart-scroll-container"><div class="chart-render-area" style="min-width: ${minWidth}px; height: 240px;"><canvas id="${chartId}"></canvas></div></div>`;
-                        } else {
-                            chartHtml += `<div class="chart-render-area" style="height: 280px;"><canvas id="${chartId}"></canvas></div>`;
+                        try {
+                            interactiveComponentData = JSON.parse(jsonString);
+                        } catch (e) {
+                            console.error("Failed to parse interactive UI JSON", e);
                         }
-                        
-                        // Using a timeout to render the chart after the element is in the DOM
-                        setTimeout(() => renderDataChart(chartId, jsonString), 0);
-                        return chartHtml;
+                        return ''; 
                     });
 
                     let contentContainer = document.createElement('div');
@@ -334,6 +676,11 @@
                             bubbleDiv.appendChild(uiElement);
                         }
                     }
+
+                    // MODIFIED: Call the styling function here
+                    if (msg.sender === 'bot') {
+                        enhanceWebSearchResults(bubbleDiv);
+                    }
                     
                     messageDiv.appendChild(bubbleDiv);
                     chatContainer.appendChild(messageDiv);
@@ -352,4 +699,7 @@
         // --- SCRIPT EXECUTION STARTS HERE ---
         setupThemeSwitcher();
         applyTheme(localStorage.getItem('theme') || 'dark');
-        window.onload = fetchAndDisplayChat;</script>
+        window.onload = fetchAndDisplayChat;
+    </script>
+</body>
+</html>
