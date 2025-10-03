@@ -1,119 +1,874 @@
 <!doctype html>
-<html lang=en>
+<html lang="en">
 <head>
-    <meta charset=UTF-8>
-    <meta content="width=device-width,initial-scale=1" name=viewport>
-    <link href=favicon.png rel=icon type=image/png>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
     <title>EyuX Chat Viewer</title>
-    <meta content=website property=og:type>
-    <meta content=https://eul45.github.io/EyuXShareLink/ property=og:url>
-    <meta content="EyuX - Chat Share" property=og:title>
-    <meta content="Shared via EyuX AI" property=og:description>
-    <meta content=https://raw.githubusercontent.com/Eul45/EyuXShareLink/643d29d4e4c6f0db76676dec23d8e401a5197894/icon.png property=og:image>
-    <meta content=summary name=twitter:card>
-    <meta content=https://eul45.github.io/EyuXShareLink/ name=twitter:url>
-    <meta content="EyuX - Chat Share" name=twitter:title>
-    <meta content="Shared via EyuX AI" name=twitter:description>
-    <meta content=https://raw.githubusercontent.com/Eul45/EyuXShareLink/643d29d4e4c6f0db76676dec23d8e401a5197894/icon.png name=twitter:image>
-    <script src=https://cdn.jsdelivr.net/npm/marked/marked.min.js></script>
-    <script src=https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js></script>
-    <!-- ADDED BACK: Chart.js library is required -->
-    <script src=https://cdn.jsdelivr.net/npm/chart.js></script>
+
+    <!-- OG Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://eul45.github.io/EyuXShareLink/">
+    <meta property="og:title" content="EyuX - Chat Share">
+    <meta property="og:description" content="Shared via EyuX AI">
+    <meta property="og:image" content="https://raw.githubusercontent.com/Eul45/EyuXShareLink/643d29d4e4c6f0db76676dec23d8e401a5197894/icon.png">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:url" content="https://eul45.github.io/EyuXShareLink/">
+    <meta name="twitter:title" content="EyuX - Chat Share">
+    <meta name="twitter:description" content="Shared via EyuX AI">
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/Eul45/EyuXShareLink/643d29d4e4c6f0db76676dec23d8e401a5197894/icon.png">
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
-        :root,body[data-theme=dark]{--bg-color:#121212;--container-bg:#1c1c1c;--text-color:#EAEAEA;--text-muted:#888;--border-color:#333;--bot-bubble-bg:#1c1c1c;--user-bubble-bg:#333333;--placeholder-bg:#3a3a3a;--header-text:#FFFFFF;--link-color:#58a6ff;--interactive-bg:rgba(255, 255, 255, 0.03);--interactive-border:rgba(255, 255, 255, 0.1);--interactive-btn-bg:rgba(255, 255, 255, 0.05);--interactive-btn-border:rgba(255, 255, 255, 0.2);--interactive-btn-primary-bg:#007AFF;--interactive-btn-primary-text:#FFFFFF;--interactive-btn-danger-bg:#FF3B30;--chart-grid-color: rgba(255, 255, 255, 0.1);--chart-label-color: #AAAAAA;--chart-tooltip-bg: #000;}
-        body[data-theme=light]{--bg-color:#f0f2f5;--container-bg:#ffffff;--text-color:#1c1c1e;--text-muted:#65676b;--border-color:#e0e0e0;--bot-bubble-bg:#FFFFFF;--user-bubble-bg:#f5f5f5;--placeholder-bg:#e5e5ea;--header-text:#1c1c1e;--link-color:#007AFF;--interactive-bg:rgba(0, 0, 0, 0.02);--interactive-border:rgba(0, 0, 0, 0.08);--interactive-btn-bg:rgba(0, 0, 0, 0.03);--interactive-btn-border:rgba(0, 0, 0, 0.1);--interactive-btn-primary-bg:#007AFF;--interactive-btn-primary-text:#FFFFFF;--interactive-btn-danger-bg:#FF3B30;--chart-grid-color: rgba(0, 0, 0, 0.1);--chart-label-color: #555555;--chart-tooltip-bg: #fff;}
-        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background-color:var(--bg-color);color:var(--text-color);margin:0;padding:15px;transition:background-color .3s,color .3s}
-        .chat-container{max-width:800px;margin:0 auto;border:1px solid var(--border-color);border-radius:12px;padding:20px;background-color:var(--container-bg);transition:background-color .3s,border-color .3s}
-        .header{position:relative;text-align:center;border-bottom:1px solid var(--border-color);padding-bottom:15px;margin-bottom:25px;transition:border-color .3s}
-        .header h1{margin:0;font-size:24px;color:var(--header-text);transition:color .3s}
-        .header p{margin:5px 0 0;color:var(--text-muted);font-size:14px}
-        .theme-switcher{position:absolute;top:-5px;right:0;background:0 0;border:none;cursor:pointer;padding:10px;border-radius:50%;display:flex;align-items:center;justify-content:center}
-        .theme-switcher:hover{background-color:rgba(128,128,128,.1)}
-        .theme-switcher svg{width:24px;height:24px;fill:var(--text-muted)}
-        .icon-moon,.icon-sun{display:none}
-        .message{display:flex;flex-direction:column;margin-bottom:20px}
-        .bubble{padding:12px 18px;border-radius:20px;line-height:1.6;max-width:85%;overflow-wrap:break-word;border:1px solid var(--border-color);transition:background-color .3s,color .3s,border-color .3s}
-        .user{align-items:flex-end}
-        .user .bubble{background-color:var(--user-bubble-bg);color:var(--text-color);border-bottom-right-radius:5px}
-        .bot{align-items:flex-start}
-        .bot .bubble{background-color:var(--bot-bubble-bg);color:var(--text-color);border-bottom-left-radius:5px;border:none}
-        .loading{text-align:center;font-size:18px;color:var(--text-muted);padding:40px 0}
-        .message-image{width:100%;max-width:400px;border-radius:15px;margin-top:8px}
-        .placeholder{display:flex;align-items:center;gap:10px;background-color:var(--placeholder-bg);padding:10px 15px;border-radius:12px;border:1px solid var(--border-color)}
-        .placeholder-icon{font-size:24px}
-        .placeholder-text{font-style:italic;color:var(--text-muted)}
-        .mermaid{background-color:#fff;padding:15px;border-radius:8px;margin:10px 0;text-align:center}
-        .bubble p{margin:0 0 10px 0}
-        .bubble p:last-child{margin-bottom:0}
-        .bubble pre{background-color:rgba(0,0,0,.2);padding:12px;border-radius:8px;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word;border:1px solid var(--border-color)}
-        .bubble code{font-family:'Courier New',Courier,monospace;font-size:14px}
-        .interactive-container{margin-top:12px;padding:16px;border-radius:12px;border:1px solid var(--interactive-border);background-color:var(--interactive-bg)}
-        .interactive-button-group{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-        .interactive-button-group.vertical{flex-direction:column}
-        .interactive-button{padding:10px 16px;border-radius:20px;border:1px solid var(--interactive-btn-border);background-color:var(--interactive-btn-bg);font-size:14px;font-weight:500;cursor:not-allowed;opacity:.7;color:var(--text-color);text-align:center}
-        .interactive-button.primary{background-color:var(--interactive-btn-primary-bg);border-color:var(--interactive-btn-primary-bg);color:var(--interactive-btn-primary-text)}
-        .interactive-button.danger{background-color:var(--interactive-btn-danger-bg);border-color:var(--interactive-btn-danger-bg);color:var(--interactive-btn-primary-text)}
-        .interactive-button-group.vertical .interactive-button{width:100%;box-sizing:border-box}
-        .interactive-poll-title{font-size:16px;font-weight:600;margin-bottom:12px;color:var(--text-color)}
-        .interactive-poll-option{display:flex;align-items:center;padding:12px;margin:4px 0;border-radius:8px;border:1px solid var(--interactive-btn-border);background-color:var(--interactive-btn-bg);cursor:not-allowed;opacity:.7}
-        .poll-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--text-muted);margin-right:12px}
-        .poll-option-text{font-size:14px;color:var(--text-color)}
-        .poll-vote-button{margin-top:12px;width:100%;box-sizing:border-box}
-        .promo-note{text-align:center;padding:15px 10px;margin-top:30px;border-top:1px solid var(--border-color);font-size:14px;color:var(--text-muted);line-height:1.5}
-        .promo-note a{color:var(--link-color);font-weight:600;text-decoration:none}
-        .promo-note a:hover{text-decoration:underline}
-        .page-footer{max-width:800px;margin:25px auto 0;padding:20px;text-align:center;color:var(--text-muted)}
-        .footer-copyright{font-size:14px;margin-bottom:15px}
-        .social-links{display:flex;justify-content:center;gap:20px}
-        .social-links a{color:var(--text-muted);text-decoration:none;transition:color .2s ease-in-out}
-        .social-links a:hover{color:var(--text-color)}
-        .social-links svg{width:24px;height:24px;fill:currentColor}
-        .copy-note{margin:2px 0 0;font-size:12px;color:var(--text-muted);font-style:italic}
-        .sources-container{margin-top:12px}
-        .sources-header{font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
-        .sources-scroll-wrapper{overflow-x:auto;padding-bottom:10px;white-space:nowrap;-webkit-overflow-scrolling:touch}
-        .source-card{display:inline-flex;flex-direction:column;width:220px;height:110px;border-radius:12px;margin-right:12px;padding:12px;background-color:var(--interactive-bg);border:1px solid var(--interactive-border);vertical-align:top;text-decoration:none;transition:background-color .2s,border-color .2s;position:relative;white-space:normal}
-        .source-card:hover{background-color:var(--interactive-btn-bg);border-color:var(--interactive-btn-border)}
-        .source-card-favicon{width:24px;height:24px;border-radius:4px;margin-bottom:8px;background-color:var(--placeholder-bg)}
-        .source-card-text{flex-grow:1;overflow:hidden}
-        .source-card-title{font-size:14px;font-weight:600;color:var(--text-color);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
-        .source-card-domain{font-size:12px;color:var(--text-muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .source-card-index{position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;background-color:var(--interactive-btn-bg);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text-color)}
-        .citation-badge{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background-color:var(--interactive-btn-bg);border:1px solid var(--interactive-btn-border);color:var(--text-color);font-size:12px;font-weight:600;text-decoration:none;margin:0 2px;vertical-align:middle;transform:translateY(-1px);transition:background-color .2s}
-        .citation-badge:hover{background-color:var(--interactive-btn-border)}
-        .chart-title{font-size:16px;font-weight:600;color:var(--text-color);margin-bottom:10px;text-align:center}
-        .chart-scroll-container{overflow-x:auto;margin:10px 0}
-        .chart-render-area{position:relative}
+        :root, body[data-theme="dark"] {
+            --bg-color: #121212;
+            --container-bg: #1c1c1c;
+            --text-color: #EAEAEA;
+            --text-muted: #888;
+            --border-color: #333;
+            --bot-bubble-bg: #1c1c1c;
+            --user-bubble-bg: #333333;
+            --placeholder-bg: #3a3a3a;
+            --header-text: #FFFFFF;
+            --link-color: #58a6ff;
+            --interactive-bg: rgba(255, 255, 255, 0.03);
+            --interactive-border: rgba(255, 255, 255, 0.1);
+            --interactive-btn-bg: rgba(255, 255, 255, 0.05);
+            --interactive-btn-border: rgba(255, 255, 255, 0.2);
+            --interactive-btn-primary-bg: #007AFF;
+            --interactive-btn-primary-text: #FFFFFF;
+            --interactive-btn-danger-bg: #FF3B30;
+            --chart-grid-color: rgba(255, 255, 255, 0.1);
+            --chart-label-color: #AAAAAA;
+            --chart-tooltip-bg: #000;
+        }
+
+        body[data-theme="light"] {
+            --bg-color: #f0f2f5;
+            --container-bg: #ffffff;
+            --text-color: #1c1c1e;
+            --text-muted: #65676b;
+            --border-color: #e0e0e0;
+            --bot-bubble-bg: #FFFFFF;
+            --user-bubble-bg: #f5f5f5;
+            --placeholder-bg: #e5e5ea;
+            --header-text: #1c1c1e;
+            --link-color: #007AFF;
+            --interactive-bg: rgba(0, 0, 0, 0.02);
+            --interactive-border: rgba(0, 0, 0, 0.08);
+            --interactive-btn-bg: rgba(0, 0, 0, 0.03);
+            --interactive-btn-border: rgba(0, 0, 0, 0.1);
+            --interactive-btn-primary-bg: #007AFF;
+            --interactive-btn-primary-text: #FFFFFF;
+            --interactive-btn-danger-bg: #FF3B30;
+            --chart-grid-color: rgba(0, 0, 0, 0.1);
+            --chart-label-color: #555555;
+            --chart-tooltip-bg: #fff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 15px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            background-color: var(--container-bg);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .header {
+            position: relative;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            transition: border-color 0.3s;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: var(--header-text);
+            transition: color 0.3s;
+        }
+        .header p {
+            margin: 5px 0 0;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .theme-switcher {
+            position: absolute;
+            top: -5px;
+            right: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-switcher:hover { background-color: rgba(128, 128, 128, 0.1); }
+        .theme-switcher svg { width: 24px; height: 24px; fill: var(--text-muted); }
+        .icon-moon, .icon-sun { display: none; }
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        .bubble {
+            padding: 12px 18px;
+            border-radius: 20px;
+            line-height: 1.6;
+            max-width: 85%;
+            overflow-wrap: break-word;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        .user { align-items: flex-end; }
+        .user .bubble {
+            background-color: var(--user-bubble-bg);
+            color: var(--text-color);
+            border-bottom-right-radius: 5px;
+        }
+        .bot { align-items: flex-start; }
+        .bot .bubble {
+            background-color: var(--bot-bubble-bg);
+            color: var(--text-color);
+            border-bottom-left-radius: 5px;
+            border: none;
+        }
+        .loading {
+            text-align: center;
+            font-size: 18px;
+            color: var(--text-muted);
+            padding: 40px 0;
+        }
+        
+        .message-image {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 15px;
+            margin-top: 8px;
+        }
+
+        .placeholder {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--placeholder-bg);
+            padding: 10px 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .placeholder-icon { font-size: 24px; }
+        .placeholder-text { font-style: italic; color: var(--text-muted); }
+
+        .mermaid {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .bubble p { margin: 0 0 10px 0; }
+        .bubble p:last-child { margin-bottom: 0; }
+        .bubble pre {
+            background-color: rgba(0,0,0,0.2);
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border: 1px solid var(--border-color);
+        }
+        .bubble code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+
+        .interactive-container {
+            margin-top: 12px;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--interactive-border);
+            background-color: var(--interactive-bg);
+        }
+        .interactive-button-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .interactive-button-group.vertical { flex-direction: column; }
+        .interactive-button {
+            padding: 10px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--interactive-btn-border);
+            background-color: var(--interactive-btn-bg);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: not-allowed;
+            opacity: 0.7;
+            color: var(--text-color);
+            text-align: center;
+        }
+        .interactive-button.primary {
+            background-color: var(--interactive-btn-primary-bg);
+            border-color: var(--interactive-btn-primary-bg);
+            color: var(--interactive-btn-primary-text);
+        }
+        .interactive-button.danger {
+            background-color: var(--interactive-btn-danger-bg);
+            border-color: var(--interactive-btn-danger-bg);
+            color: var(--interactive-btn-primary-text);
+        }
+        .interactive-button-group.vertical .interactive-button {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .interactive-poll-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-color);
+        }
+        .interactive-poll-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin: 4px 0;
+            border-radius: 8px;
+            border: 1px solid var(--interactive-btn-border);
+            background-color: var(--interactive-btn-bg);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .poll-radio {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--text-muted);
+            margin-right: 12px;
+        }
+        .poll-option-text {
+            font-size: 14px;
+            color: var(--text-color);
+        }
+        .poll-vote-button {
+            margin-top: 12px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .promo-note {
+            text-align: center;
+            padding: 15px 10px;
+            margin-top: 30px;
+            border-top: 1px solid var(--border-color);
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+        .promo-note a {
+            color: var(--link-color);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .promo-note a:hover { text-decoration: underline; }
+
+        .page-footer {
+            max-width: 800px;
+            margin: 25px auto 0;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        .footer-copyright { font-size: 14px; margin-bottom: 15px; }
+        .social-links { display: flex; justify-content: center; gap: 20px; }
+        .social-links a { color: var(--text-muted); text-decoration: none; transition: color .2s ease-in-out; }
+        .social-links a:hover { color: var(--text-color); }
+        .social-links svg { width: 24px; height: 24px; fill: currentColor; }
+        
+        .copy-note {
+            margin: 2px 0 0;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .sources-container {
+            margin-top: 12px;
+        }
+        .sources-header {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .sources-scroll-wrapper {
+            overflow-x: auto;
+            padding-bottom: 10px;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+        .source-card {
+            display: inline-flex;
+            flex-direction: column;
+            width: 220px;
+            height: 110px;
+            border-radius: 12px;
+            margin-right: 12px;
+            padding: 12px;
+            background-color: var(--interactive-bg);
+            border: 1px solid var(--interactive-border);
+            vertical-align: top;
+            text-decoration: none;
+            transition: background-color .2s, border-color .2s;
+            position: relative;
+            white-space: normal;
+        }
+        .source-card:hover {
+            background-color: var(--interactive-btn-bg);
+            border-color: var(--interactive-btn-border);
+        }
+        .source-card-favicon {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            background-color: var(--placeholder-bg);
+        }
+        .source-card-text {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        .source-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;  
+            overflow: hidden;
+            line-height: 1.4;
+        }
+        .source-card-domain {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .source-card-index {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--interactive-btn-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+        .citation-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--interactive-btn-bg);
+            border: 1px solid var(--interactive-btn-border);
+            color: var(--text-color);
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            margin: 0 2px;
+            vertical-align: middle;
+            transform: translateY(-1px);
+            transition: background-color .2s;
+        }
+        .citation-badge:hover {
+            background-color: var(--interactive-btn-border);
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .chart-scroll-container {
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .chart-render-area {
+            position: relative;
+        }
+
     </style>
 </head>
-<body data-theme=dark>
-    <div class=chat-container id=chat-container>
-        <div class=loading>Loading conversation...</div>
+<body data-theme="dark">
+
+    <div id="chat-container" class="chat-container">
+        <div class="loading">Loading conversation...</div>
     </div>
-    <footer class=page-footer id=page-footer></footer>
+
+    <footer id="page-footer" class="page-footer"></footer>
+    
     <script>
-        const chatContainer=document.getElementById("chat-container"),pageFooter=document.getElementById("page-footer"),themeSwitch=document.createElement("button"),body=document.body;let activeCharts=[];mermaid.initialize({startOnLoad:!1});function setupThemeSwitcher(){themeSwitch.className="theme-switcher",themeSwitch.setAttribute("aria-label","Toggle theme"),themeSwitch.innerHTML=`
-            <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.64 5.64c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l1.06 1.06c.39.39 1.02.39 1.41 0s.39-1.02 0-1.41L5.64 5.64zm12.73 12.73c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l1.06 1.06c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41l-1.06-1.06zM5.64 18.36l-1.06-1.06c-.39-.39-.39-1.02 0-1.41s1.02-.39 1.41 0l1.06 1.06c.39.39.39 1.02 0 1.41s-1.02.39-1.41 0zM19.43 5.64c.39-.39.39-1.02 0-1.41-.39-.39-1.02-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.02 0 1.41s1.02.39 1.41 0l1.06-1.06z"/></svg>
-            <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.1 12.08c-2.33-4.51-.5-8.48.53-10.07-1.29 1.25-2.27 2.82-2.8 4.48-1.09 3.32.16 6.55 2.27 8.66 2.11 2.11 5.33 3.35 8.65 2.27 1.66-.53 3.24-1.51 4.48-2.8-1.59 1.03-5.56 2.87-10.07.53z"/></svg>
-        `,themeSwitch.addEventListener("click",switchTheme)}function applyTheme(e){body.setAttribute("data-theme",e);const t=themeSwitch.querySelector(".icon-sun"),c=themeSwitch.querySelector(".icon-moon");t.style.display="light"===e?"block":"none",c.style.display="dark"===e?"block":"none"}async function renderMermaidDiagrams(){const e=body.getAttribute("data-theme");mermaid.mermaidAPI.setConfig({theme:"dark"===e?"dark":"default"}),document.querySelectorAll(".mermaid[data-processed]").forEach(e=>e.removeAttribute("data-processed")),await mermaid.run({nodes:document.querySelectorAll(".mermaid"),suppressErrors:!0})}function renderDataChart(e,t){const c=document.getElementById(e);if(!c)return;const n=body.getAttribute("data-theme"),a=getComputedStyle(document.documentElement).getPropertyValue("--chart-grid-color").trim(),i=getComputedStyle(document.documentElement).getPropertyValue("--chart-label-color").trim(),o=getComputedStyle(document.documentElement).getPropertyValue("--chart-tooltip-bg").trim(),r=JSON.parse(t),l=r.data.map(e=>e.label),s=r.data.map(e=>e.value);let d;const p=["#8B2BE2","#FF6B6B","#4ECDC4","#FFD93D","#6BCF7F","#FF8A5B","#95E1D3","#F38181","#AA96DA","#FCBAD3"];switch(r.type){case"pie":d={type:"pie",data:{labels:l,datasets:[{label:r.title||"",data:s,backgroundColor:p,borderWidth:2,borderColor:"dark"===n?"#1c1c1c":"#ffffff"}]},options:{responsive:!0,plugins:{legend:{position:"top",labels:{color:i}},title:{display:!1},tooltip:{backgroundColor:o,titleColor:i,bodyColor:i}}}};break;case"bar":d={type:"bar",data:{labels:l,datasets:[{label:r.title||"",data:s,backgroundColor:"rgba(139, 43, 226, 0.6)",borderColor:"rgba(139, 43, 226, 1)",borderWidth:1}]},options:{responsive:!0,maintainAspectRatio:!1,plugins:{legend:{display:!1},title:{display:!1},tooltip:{backgroundColor:o,titleColor:i,bodyColor:i}},scales:{y:{ticks:{color:i},grid:{color:a}},x:{ticks:{color:i},grid:{color:"transparent"}}}}};break;case"line":d={type:"line",data:{labels:l,datasets:[{label:r.title||"",data:s,fill:!0,backgroundColor:"rgba(0, 122, 255, 0.1)",borderColor:"rgba(0, 122, 255, 1)",tension:.3}]},options:{responsive:!0,maintainAspectRatio:!1,plugins:{legend:{display:!1},title:{display:!1},tooltip:{backgroundColor:o,titleColor:i,bodyColor:i}},scales:{y:{ticks:{color:i},grid:{color:a}},x:{ticks:{color:i},grid:{color:"transparent"}}}}}}d&&activeCharts.push(new Chart(c,d))}async function switchTheme(){const e="dark"===body.getAttribute("data-theme")?"light":"dark";applyTheme(e),localStorage.setItem("theme",e),await renderMermaidDiagrams();const t=getComputedStyle(document.documentElement).getPropertyValue("--chart-grid-color").trim(),c=getComputedStyle(document.documentElement).getPropertyValue("--chart-label-color").trim(),n=getComputedStyle(document.documentElement).getPropertyValue("--chart-tooltip-bg").trim(),a="dark"===e?"#1c1c1c":"#ffffff";activeCharts.forEach(e=>{"pie"===e.config.type?(e.options.plugins.legend.labels.color=c,e.options.plugins.tooltip.backgroundColor=n,e.data.datasets[0].borderColor=a):(e.options.scales.y.ticks.color=c,e.options.scales.x.ticks.color=c,e.options.scales.y.grid.color=t,e.options.plugins.tooltip.backgroundColor=n),e.update()})}function buildPromoBanner(){const e=document.createElement("div");e.className="promo-note",e.innerHTML=`
-            This chat was shared from the EyuX AI assistant for Android.<br>
-            Don't have the app? <a href="https://eyux.en.uptodown.com/android" target="_blank" rel="noopener noreferrer">Get it here!</a>
-        `,chatContainer.appendChild(e)}function buildFooter(){const e=(new Date).getFullYear();pageFooter.innerHTML=`
-            <p class="footer-copyright">&copy; ${e} EyuX AI</p>
-            <div class="social-links">
-                 <a href="https://t.me/Eul_zzz" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><svg viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.62 12c-.88-.27-.88-1.37 0-1.71l15.6-6.11c.76-.3 1.45.14 1.2 1.12l-2.35 11.23c-.24 1.15-1.01 1.43-1.8 1.01l-4.52-3.33-2.14 2.05c-.23.23-.42.42-.8.42z"/></svg></a>
-                <a href="https://www.instagram.com/eyuel_eng" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2c-2.717 0-3.056.01-4.122.06-1.065.05-1.79.22-2.428.46-1.29.5-2.285 1.5-2.785 2.78-.24.64-.41 1.36-.46 2.42C2.01 9.28 2 9.58 2 12s.01 2.72.06 3.78c.05 1.07.22 1.79.46 2.43.5 1.28 1.5 2.28 2.78 2.78.64.24 1.36.41 2.42.46 1.07.05 1.4.06 3.78.06s2.72-.01 3.78-.06c1.07-.05 1.79-.22 2.43-.46 1.28-.5 2.28-1.5 2.78-2.78.24-.64.41-1.36.46-2.42.05-1.07.06-1.4.06-3.78s-.01-2.72-.06-3.78c-.05-1.07-.22-1.79-.46-2.43-.5-1.28-1.5-2.28-2.78-2.78-.64-.24-1.36-.41-2.42-.46C15.056 2.01 14.717 2 12 2zm0 1.8c2.666 0 2.98.01 4.04.06 1.01.05 1.55.2 1.96.37.58.24.97.55 1.38 1 .4.4.75.8 1 1.38.17.4.32.95.37 1.96.05 1.06.06 1.37.06 4.04s-.01 2.98-.06 4.04c-.05 1.01-.2 1.55-.37 1.96-.24.58-.55.97-1 1.38-.4-.4-.8-.75-1.38-1-.4-.17-.95-.32-1.96-.37-1.06-.05-1.37-.06-4.04-.06s-2.98-.01-4.04-.06c-1.01-.05-1.55-.2-1.96-.37-.58-.24-.97-.55-1.38-1-.4-.4-.75-.8-1-1.38-.17-.4-.32-.95-.37-1.96C4.01 14.98 4 14.67 4 12s.01-2.98.06-4.04c.05-1.01.2-1.55.37-1.96.24-.58.55.97 1-1.38.4-.4.8-.75 1.38-1 .4-.17.95-.32 1.96-.37C9.02 4.01 9.33 4 12 4zm0 3.25c-2.623 0-4.75 2.127-4.75 4.75S9.377 16.75 12 16.75 16.75 14.623 16.75 12 14.623 7.25 12 7.25zm0 7.7c-1.63 0-2.95-1.32-2.95-2.95s1.32-2.95 2.95-2.95 2.95 1.32 2.95 2.95-1.32 2.95-2.95 2.95zm5.5-8.5c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25z"/></svg></a>
-                <a href="https://github.com/Eul45" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.5-1.4-1.3-1.8-1.3-1.8-1-1 .1-1 .1-1 1.1.1 1.7 1.2 1.7 1.2.9 1.6 2.4 1.2 3 .9.1-.7.4-1.2.7-1.5-2.3-.3-4.7-1.1-4.7-5.1 0-1.1.4-2 1-2.8-.1-.3-.4-1.3.1-2.7 0 0 .9-.3 2.8 1 .8-.2 1.7-.3 2.5-.3s1.7.1 2.5.3c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.8 1 1.7 1 2.8 0 4-2.4 4.8-4.7 5.1.4.3.8.9.8 1.8v2.8c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/></svg></a>
-                <a href="https://www.linkedin.com/in/eyuel-engida-77155a317" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M21.1 0H2.9C1.3 0 0 1.3 0 2.9v18.2C0 22.7 1.3 24 2.9 24h18.2c1.6 0 2.9-1.3 2.9-2.9V2.9C24 1.3 22.7 0 21.1 0zM7.1 20.3h-3V8.9h3v11.4zM5.6 7.6c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.8 1.8-1.8 1.8zm13.1 12.7h-3V14c0-1.6-.6-2.7-2-2.7-1.1 0-1.7.7-2 1.4-.1.2-.1.5-.1.8v6.8h-3s.1-10.3 0-11.4h3v1.6c.4-.7 1.4-1.7 2.7-1.7 2 0 3.5 1.3 3.5 4.1v7.4z"/></svg></a>
-            </div>
-        `}function updateMetaTags(e){const t=window.location.href;document.title=`EyuX Share - ${e}`,document.querySelector('meta[property="og:title"]').setAttribute("content",`EyuX - ${e}`),document.querySelector('meta[name="twitter:title"]').setAttribute("content",`EyuX - ${e}`),document.querySelector('meta[property="og:url"]').setAttribute("content",t),document.querySelector('meta[name="twitter:url"]').setAttribute("content",t)}function renderInteractiveUI(e){if(!e||!e.type)return null;if("button_group"===e.type){const t=document.createElement("div");return t.className="interactive-button-group","vertical"===e.layout&&t.classList.add("vertical"),e.buttons.forEach(e=>{const c=document.createElement("button");c.className="interactive-button",c.classList.add(e.style||"secondary"),c.textContent=e.label,c.disabled=!0,t.appendChild(c)}),t}if("poll"===e.type){const t=document.createElement("div");t.className="interactive-container";const c=document.createElement("div");c.className="interactive-poll-title",c.textContent=e.title,t.appendChild(c),e.options.forEach(e=>{const c=document.createElement("div");c.className="interactive-poll-option";const n=document.createElement("span");n.className="poll-radio",c.appendChild(n);const a=document.createElement("span");a.className="poll-option-text",a.textContent=e.label,c.appendChild(a),t.appendChild(c)});const n=document.createElement("button");return n.className="interactive-button primary poll-vote-button",n.textContent="Vote",n.disabled=!0,t.appendChild(n),t}return null}function enhanceWebSearchResults(e){const t=Array.from(e.querySelectorAll("strong")).find(e=>"sources"===e.textContent.trim().toLowerCase());if(!t)return;const c=t.parentElement.nextElementSibling;if(!c||"UL"!==c.tagName)return;t.parentElement.style.display="none",c.style.display="none";const n=document.createElement("div");n.className="sources-container",n.innerHTML='<div class="sources-header">SOURCES</div>';const a=document.createElement("div");a.className="sources-scroll-wrapper",n.appendChild(a);const i=Array.from(c.querySelectorAll("li a")),o=[];i.forEach((e,t)=>{const c=e.href,n=e.textContent,i=new URL(c).hostname.replace("www.",""),r=`https://www.google.com/s2/favicons?sz=64&domain_url=${i}`;o.push(c);const l=document.createElement("a");l.className="source-card",l.href=c,l.target="_blank",l.rel="noopener noreferrer",l.innerHTML=`
-                    <img src="${r}" alt="" class="source-card-favicon" onerror="this.style.display='none'">
+        const chatContainer = document.getElementById('chat-container');
+        const pageFooter = document.getElementById('page-footer');
+        const themeSwitch = document.createElement('button');
+        const body = document.body;
+        let activeCharts = [];
+
+        mermaid.initialize({ startOnLoad: false });
+
+        function setupThemeSwitcher() {
+            themeSwitch.className = 'theme-switcher';
+            themeSwitch.setAttribute('aria-label', 'Toggle theme');
+            themeSwitch.innerHTML = `
+                <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.64 5.64c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l1.06 1.06c.39.39 1.02.39 1.41 0s.39-1.02 0-1.41L5.64 5.64zm12.73 12.73c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l1.06 1.06c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41l-1.06-1.06zM5.64 18.36l-1.06-1.06c-.39-.39-.39-1.02 0-1.41s1.02-.39 1.41 0l1.06 1.06c.39.39.39 1.02 0 1.41s-1.02.39-1.41 0zM19.43 5.64c.39-.39.39-1.02 0-1.41-.39-.39-1.02-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.02 0 1.41s1.02.39 1.41 0l1.06-1.06z"/></svg>
+                <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.1 12.08c-2.33-4.51-.5-8.48.53-10.07-1.29 1.25-2.27 2.82-2.8 4.48-1.09 3.32.16 6.55 2.27 8.66 2.11 2.11 5.33 3.35 8.65 2.27 1.66-.53 3.24-1.51 4.48-2.8-1.59 1.03-5.56 2.87-10.07.53z"/></svg>
+            `;
+            themeSwitch.addEventListener('click', switchTheme);
+        }
+
+        function applyTheme(theme) {
+            body.setAttribute('data-theme', theme);
+            const sunIcon = themeSwitch.querySelector('.icon-sun');
+            const moonIcon = themeSwitch.querySelector('.icon-moon');
+            sunIcon.style.display = theme === 'light' ? 'block' : 'none';
+            moonIcon.style.display = theme === 'dark' ? 'block' : 'none';
+        }
+
+        async function renderMermaidDiagrams() {
+            const currentTheme = body.getAttribute('data-theme');
+            mermaid.mermaidAPI.setConfig({ theme: currentTheme === 'dark' ? 'dark' : 'default' });
+            document.querySelectorAll('.mermaid[data-processed]').forEach(el => el.removeAttribute('data-processed'));
+            await mermaid.run({ nodes: document.querySelectorAll('.mermaid'), suppressErrors: true });
+        }
+        
+        function renderDataChart(canvasId, chartJson) {
+            const ctx = document.getElementById(canvasId);
+            if (!ctx) return;
+
+            const currentTheme = body.getAttribute('data-theme');
+            const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-grid-color').trim();
+            const labelColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-label-color').trim();
+            const tooltipBg = getComputedStyle(document.documentElement).getPropertyValue('--chart-tooltip-bg').trim();
+            
+            const chartData = JSON.parse(chartJson);
+            const labels = chartData.data.map(d => d.label);
+            const values = chartData.data.map(d => d.value);
+
+            let chartConfig;
+
+            const pieColors = ['#8B2BE2', '#FF6B6B', '#4ECDC4', '#FFD93D', '#6BCF7F', '#FF8A5B', '#95E1D3', '#F38181', '#AA96DA', '#FCBAD3'];
+
+            switch(chartData.type) {
+                case 'pie':
+                    chartConfig = {
+                        type: 'pie',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: chartData.title || '',
+                                data: values,
+                                backgroundColor: pieColors,
+                                borderWidth: 2,
+                                borderColor: currentTheme === 'dark' ? '#1c1c1c' : '#ffffff',
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: { position: 'top', labels: { color: labelColor } },
+                                title: { display: false },
+                                tooltip: { backgroundColor: tooltipBg, titleColor: labelColor, bodyColor: labelColor }
+                            }
+                        }
+                    };
+                    break;
+                case 'bar':
+                    chartConfig = {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: chartData.title || '',
+                                data: values,
+                                backgroundColor: 'rgba(139, 43, 226, 0.6)',
+                                borderColor: 'rgba(139, 43, 226, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                title: { display: false },
+                                tooltip: { backgroundColor: tooltipBg, titleColor: labelColor, bodyColor: labelColor }
+                            },
+                            scales: {
+                                y: { ticks: { color: labelColor }, grid: { color: gridColor } },
+                                x: { ticks: { color: labelColor }, grid: { color: 'transparent' } }
+                            }
+                        }
+                    };
+                    break;
+                case 'line':
+                    chartConfig = {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: chartData.title || '',
+                                data: values,
+                                fill: true,
+                                backgroundColor: 'rgba(0, 122, 255, 0.1)',
+                                borderColor: 'rgba(0, 122, 255, 1)',
+                                tension: 0.3
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                title: { display: false },
+                                tooltip: { backgroundColor: tooltipBg, titleColor: labelColor, bodyColor: labelColor }
+                            },
+                            scales: {
+                                y: { ticks: { color: labelColor }, grid: { color: gridColor } },
+                                x: { ticks: { color: labelColor }, grid: { color: 'transparent' } }
+                            }
+                        }
+                    };
+                    break;
+            }
+
+            if (chartConfig) {
+                const chartInstance = new Chart(ctx, chartConfig);
+                activeCharts.push(chartInstance);
+            }
+        }
+
+        async function switchTheme() {
+            const newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+            localStorage.setItem('theme', newTheme);
+            await renderMermaidDiagrams();
+            
+            const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-grid-color').trim();
+            const labelColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-label-color').trim();
+            const tooltipBg = getComputedStyle(document.documentElement).getPropertyValue('--chart-tooltip-bg').trim();
+            const borderColor = newTheme === 'dark' ? '#1c1c1c' : '#ffffff';
+
+            activeCharts.forEach(chart => {
+                if (chart.config.type === 'pie') {
+                    chart.options.plugins.legend.labels.color = labelColor;
+                    chart.options.plugins.tooltip.backgroundColor = tooltipBg;
+                    chart.data.datasets[0].borderColor = borderColor;
+                } else {
+                    chart.options.scales.y.ticks.color = labelColor;
+                    chart.options.scales.x.ticks.color = labelColor;
+                    chart.options.scales.y.grid.color = gridColor;
+                    chart.options.plugins.tooltip.backgroundColor = tooltipBg;
+                }
+                chart.update();
+            });
+        }
+        
+        function buildPromoBanner() {
+            const promoDiv = document.createElement('div');
+            promoDiv.className = 'promo-note';
+            promoDiv.innerHTML = `
+                This chat was shared from the EyuX AI assistant for Android.<br>
+                Don't have the app? <a href="https://eyux.en.uptodown.com/android" target="_blank" rel="noopener noreferrer">Get it here!</a>
+            `;
+            chatContainer.appendChild(promoDiv);
+        }
+        
+        function buildFooter() {
+            const currentYear = new Date().getFullYear();
+            pageFooter.innerHTML = `
+                <p class="footer-copyright">&copy; ${currentYear} EyuX AI</p>
+                <div class="social-links">
+                     <a href="https://t.me/Eul_zzz" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><svg viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.62 12c-.88-.27-.88-1.37 0-1.71l15.6-6.11c.76-.3 1.45.14 1.2 1.12l-2.35 11.23c-.24 1.15-1.01 1.43-1.8 1.01l-4.52-3.33-2.14 2.05c-.23.23-.42.42-.8.42z"/></svg></a>
+                    <a href="https://www.instagram.com/eyuel_eng" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2c-2.717 0-3.056.01-4.122.06-1.065.05-1.79.22-2.428.46-1.29.5-2.285 1.5-2.785 2.78-.24.64-.41 1.36-.46 2.42C2.01 9.28 2 9.58 2 12s.01 2.72.06 3.78c.05 1.07.22 1.79.46 2.43.5 1.28 1.5 2.28 2.78 2.78.64.24 1.36.41 2.42.46 1.07.05 1.4.06 3.78.06s2.72-.01 3.78-.06c1.07-.05 1.79-.22 2.43-.46 1.28-.5 2.28-1.5 2.78-2.78.24-.64-.41-1.36.46-2.42.05-1.07.06-1.4.06-3.78s-.01-2.72-.06-3.78c-.05-1.07-.22-1.79-.46-2.43-.5-1.28-1.5-2.28-2.78-2.78-.64-.24-1.36-.41-2.42-.46C15.056 2.01 14.717 2 12 2zm0 1.8c2.666 0 2.98.01 4.04.06 1.01.05 1.55.2 1.96.37.58.24.97.55 1.38 1 .4.4.75.8 1 1.38.17.4.32.95.37 1.96.05 1.06.06 1.37.06 4.04s-.01 2.98-.06 4.04c-.05 1.01-.2 1.55-.37 1.96-.24.58-.55.97-1 1.38-.4-.4-.8-.75-1.38-1-.4-.17-.95-.32-1.96-.37-1.06-.05-1.37-.06-4.04-.06s-2.98-.01-4.04-.06c-1.01-.05-1.55-.2-1.96-.37-.58-.24-.97-.55-1.38-1-.4-.4-.75-.8-1-1.38-.17-.4-.32-.95-.37-1.96C4.01 14.98 4 14.67 4 12s.01-2.98.06-4.04c.05-1.01.2-1.55.37-1.96.24-.58.55.97 1-1.38.4-.4.8-.75 1.38-1 .4-.17.95-.32 1.96-.37C9.02 4.01 9.33 4 12 4zm0 3.25c-2.623 0-4.75 2.127-4.75 4.75S9.377 16.75 12 16.75 16.75 14.623 16.75 12 14.623 7.25 12 7.25zm0 7.7c-1.63 0-2.95-1.32-2.95-2.95s1.32-2.95 2.95-2.95 2.95 1.32 2.95 2.95-1.32 2.95-2.95 2.95zm5.5-8.5c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25z"/></svg></a>
+                    <a href="https://github.com/Eul45" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.5-1.4-1.3-1.8-1.3-1.8-1-1 .1-1 .1-1 1.1.1 1.7 1.2 1.7 1.2.9 1.6 2.4 1.2 3 .9.1-.7.4-1.2.7-1.5-2.3-.3-4.7-1.1-4.7-5.1 0-1.1.4-2 1-2.8-.1-.3-.4-1.3.1-2.7 0 0 .9-.3 2.8 1 .8-.2 1.7-.3 2.5-.3s1.7.1 2.5.3c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.8 1 1.7 1 2.8 0 4-2.4 4.8-4.7 5.1.4.3.8.9.8 1.8v2.8c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/></svg></a>
+                    <a href="https://www.linkedin.com/in/eyuel-engida-77155a317" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M21.1 0H2.9C1.3 0 0 1.3 0 2.9v18.2C0 22.7 1.3 24 2.9 24h18.2c1.6 0 2.9-1.3 2.9-2.9V2.9C24 1.3 22.7 0 21.1 0zM7.1 20.3h-3V8.9h3v11.4zM5.6 7.6c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.8 1.8-1.8 1.8zm13.1 12.7h-3V14c0-1.6-.6-2.7-2-2.7-1.1 0-1.7.7-2 1.4-.1.2-.1.5-.1.8v6.8h-3s.1-10.3 0-11.4h3v1.6c.4-.7 1.4-1.7 2.7-1.7 2 0 3.5 1.3 3.5 4.1v7.4z"/></svg></a>
+                </div>
+            `;
+        }
+
+        function updateMetaTags(chatTitle) {
+            const pageUrl = window.location.href;
+            document.title = `EyuX Share - ${chatTitle}`;
+            document.querySelector('meta[property="og:title"]').setAttribute('content', `EyuX - ${chatTitle}`);
+            document.querySelector('meta[name="twitter:title"]').setAttribute('content', `EyuX - ${chatTitle}`);
+            document.querySelector('meta[property="og:url"]').setAttribute('content', pageUrl);
+            document.querySelector('meta[name="twitter:url"]').setAttribute('content', pageUrl);
+        }
+
+        function renderInteractiveUI(component) {
+            if (!component || !component.type) return null;
+
+            if (component.type === 'button_group') {
+                const container = document.createElement('div');
+                container.className = 'interactive-button-group';
+                if (component.layout === 'vertical') {
+                    container.classList.add('vertical');
+                }
+                component.buttons.forEach(buttonData => {
+                    const button = document.createElement('button');
+                    button.className = 'interactive-button';
+                    button.classList.add(buttonData.style || 'secondary');
+                    button.textContent = buttonData.label;
+                    button.disabled = true;
+                    container.appendChild(button);
+                });
+                return container;
+            }
+
+            if (component.type === 'poll') {
+                const container = document.createElement('div');
+                container.className = 'interactive-container';
+                const title = document.createElement('div');
+                title.className = 'interactive-poll-title';
+                title.textContent = component.title;
+                container.appendChild(title);
+                component.options.forEach(optionData => {
+                    const option = document.createElement('div');
+                    option.className = 'interactive-poll-option';
+                    const radio = document.createElement('span');
+                    radio.className = 'poll-radio';
+                    option.appendChild(radio);
+                    const text = document.createElement('span');
+                    text.className = 'poll-option-text';
+                    text.textContent = optionData.label;
+                    option.appendChild(text);
+                    container.appendChild(option);
+                });
+                const voteButton = document.createElement('button');
+                voteButton.className = 'interactive-button primary poll-vote-button';
+                voteButton.textContent = 'Vote';
+                voteButton.disabled = true;
+                container.appendChild(voteButton);
+                return container;
+            }
+
+            return null;
+        }
+        
+        function enhanceWebSearchResults(bubbleElement) {
+            const sourcesHeading = Array.from(bubbleElement.querySelectorAll('strong')).find(el => el.textContent.trim().toLowerCase() === 'sources');
+            if (!sourcesHeading) return;
+
+            const sourceList = sourcesHeading.parentElement.nextElementSibling;
+            if (!sourceList || sourceList.tagName !== 'UL') return;
+
+            sourcesHeading.parentElement.style.display = 'none';
+            sourceList.style.display = 'none';
+            
+            const sourcesContainer = document.createElement('div');
+            sourcesContainer.className = 'sources-container';
+            sourcesContainer.innerHTML = `<div class="sources-header">SOURCES</div>`;
+            const scrollWrapper = document.createElement('div');
+            scrollWrapper.className = 'sources-scroll-wrapper';
+            sourcesContainer.appendChild(scrollWrapper);
+
+            const sourceLinks = Array.from(sourceList.querySelectorAll('li a'));
+            const sourceUrls = [];
+
+            sourceLinks.forEach((link, index) => {
+                const url = link.href;
+                const title = link.textContent;
+                const domain = new URL(url).hostname.replace('www.', '');
+                const faviconUrl = `https://www.google.com/s2/favicons?sz=64&domain_url=${domain}`;
+                sourceUrls.push(url);
+
+                const card = document.createElement('a');
+                card.className = 'source-card';
+                card.href = url;
+                card.target = '_blank';
+                card.rel = 'noopener noreferrer';
+
+                card.innerHTML = `
+                    <img src="${faviconUrl}" alt="" class="source-card-favicon" onerror="this.style.display='none'">
                     <div class="source-card-text">
-                        <div class="source-card-title">${n}</div>
-                        <div class="source-card-domain">${i}</div>
+                        <div class="source-card-title">${title}</div>
+                        <div class="source-card-domain">${domain}</div>
                     </div>
-                    <div class="source-card-index">${t+1}</div>
-                `,a.appendChild(l)}),e.appendChild(n);const r=e.querySelectorAll("p");r.forEach(e=>{e.innerHTML=e.innerHTML.replace(/\[([\d,\s]+)\]/g,((e,t)=>{const c=t.split(",").map(e=>parseInt(e.trim(),10));let n="";return c.forEach(e=>{if(!isNaN(e)&&e>0&&e<=o.length){const t=o[e-1];n+=`<a href="${t}" target="_blank" rel="noopener noreferrer" class="citation-badge">${e}</a>`}}),n||e}))})}function renderChartsInBubble(e,t){const c=e.querySelectorAll("p");c.forEach(c=>{const n=c.textContent.match(/\[DATA_CHART\]([\s\S]*?)\[\/DATA_CHART\]/);if(n&&n[1]){const a=n[1],i=`chart-${t}-${Math.random()}`;try{const t=JSON.parse(a),n=document.createElement("div");n.className="chart-container-wrapper";let o=`<div class="chart-title">${t.title||""}</div>`;"line"===t.type||"bar"===t.type?(o+=`<div class="chart-scroll-container"><div class="chart-render-area" style="min-width: ${60*t.data.length}px; height: 240px;"><canvas id="${i}"></canvas></div></div>`,n.innerHTML=o):"pie"===t.type&&(o+='<div class="chart-render-area" style="height: 280px; max-width: 400px; margin: auto;"><canvas id="'+i+'"></canvas></div>',n.innerHTML=o),c.parentNode.replaceChild(n,c),renderDataChart(i,a)}catch(e){console.error("Failed to parse chart JSON",e)}}})}async function fetchAndDisplayChat(){try{const e=new URLSearchParams(window.location.search).get("id");if(!e)throw new Error("No chat ID provided.");const t=await fetch(`https://eyux-share-api.vercel.app/api/read/${e}`);if(!t.ok)throw new Error("Could not fetch chat data.");const c=await t.json();updateMetaTags(c.title),chatContainer.innerHTML="",activeCharts=[];const n=document.createElement("div");n.className="header";const a=new Date(c.timestamp).toLocaleString();n.innerHTML=`<h1>${c.title}</h1><p>Shared on ${a}</p> <p class="copy-note">This is a copy of a conversation between EyuX & Anonymous.</p>`,n.appendChild(themeSwitch),chatContainer.appendChild(n),c.messages.forEach((e,t)=>{if("welcome"===e.type)return;const c=document.createElement("div");c.className=`message ${e.sender}`;const n=document.createElement("div");n.className="bubble";let a=null;const i=/\[INTERACTIVE_UI\]([\s\S]*?)\[\/INTERACTIVE_UI\]/g,o=/\[CODEBLOCK:mermaid\]([\s\S]*?)\[\/CODEBLOCK\]/g;let r=e.text||"";r=r.replace(i,((e,t)=>{try{a=JSON.parse(t)}catch(e){console.error("Failed to parse interactive UI JSON",e)}return""}));let l=document.createElement("div");"image_generated"===e.type&&e.imageUri?l.innerHTML=`<img src="${e.imageUri}" alt="AI Generated Image" class="message-image">`:e.imageUri?l.innerHTML='<div class="placeholder"><span class="placeholder-icon">🖼️</span> <span class="placeholder-text">[Image Sent]</span></div>':e.fileInfo?l.innerHTML=`<div class="placeholder"><span class="placeholder-icon">📄</span> <span class="placeholder-text">[File Sent: ${e.fileInfo.name}]</span></div>`:r.trim()?l.innerHTML=marked.parse(r.replace(o,((e,t)=>`<pre class="mermaid">${t.trim()}</pre>`))):"image_generating"===e.type&&(l.innerHTML='<div class="placeholder"><span class="placeholder-icon">⏳</span> <span class="placeholder-text">[AI is generating an image...]</span></div>'),n.appendChild(l),a&&n.appendChild(renderInteractiveUI(a)),"bot"===e.sender&&(enhanceWebSearchResults(n),renderChartsInBubble(n,t)),c.appendChild(n),chatContainer.appendChild(c)}),await renderMermaidDiagrams(),buildPromoBanner(),buildFooter()}catch(e){chatContainer.innerHTML='<div class="loading" style="color: #ff5c5c;">Error: Failed to fetch conversation.<br>(The server may be overloaded, or the link may have expired)</div>',console.error("Failed to load chat:",e)}}setupThemeSwitcher(),applyTheme(localStorage.getItem("theme")||"dark"),window.onload=fetchAndDisplayChat;
+                    <div class="source-card-index">${index + 1}</div>
+                `;
+                scrollWrapper.appendChild(card);
+            });
+
+            bubbleElement.appendChild(sourcesContainer);
+
+            const paragraphs = bubbleElement.querySelectorAll('p');
+            paragraphs.forEach(p => {
+                p.innerHTML = p.innerHTML.replace(/\[([\d,\s]+)\]/g, (match, numbers) => {
+                    const indices = numbers.split(',').map(n => parseInt(n.trim(), 10));
+                    let badgesHtml = '';
+                    indices.forEach(index => {
+                        if (!isNaN(index) && index > 0 && index <= sourceUrls.length) {
+                            const url = sourceUrls[index - 1];
+                            badgesHtml += `<a href="${url}" target="_blank" rel="noopener noreferrer" class="citation-badge">${index}</a>`;
+                        }
+                    });
+                    return badgesHtml || match;
+                });
+            });
+        }
+
+        async function fetchAndDisplayChat() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const chatId = params.get('id');
+                if (!chatId) throw new Error("No chat ID provided.");
+
+                const response = await fetch(`https://eyux-share-api.vercel.app/api/read/${chatId}`);
+                if (!response.ok) throw new Error("Could not fetch chat data.");
+                
+                const conversation = await response.json();
+                
+                updateMetaTags(conversation.title);
+
+                chatContainer.innerHTML = '';
+                activeCharts = [];
+
+                const header = document.createElement('div');
+                header.className = 'header';
+                const timestamp = new Date(conversation.timestamp).toLocaleString();
+                header.innerHTML = `<h1>${conversation.title}</h1><p>Shared on ${timestamp}</p> <p class="copy-note">This is a copy of a conversation between EyuX & Anonymous.</p>`;
+                header.appendChild(themeSwitch);
+                chatContainer.appendChild(header);
+                
+                conversation.messages.forEach((msg, index) => {
+                    if (msg.type === 'welcome') return;
+
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${msg.sender}`;
+                    const bubbleDiv = document.createElement('div');
+                    bubbleDiv.className = 'bubble';
+                    
+                    let interactiveComponentData = null;
+                    const interactiveUIRegex = /\[INTERACTIVE_UI\]([\s\S]*?)\[\/INTERACTIVE_UI\]/g;
+                    const mermaidRegex = /\[CODEBLOCK:mermaid\]([\s\S]*?)\[\/CODEBLOCK\]/g;
+                    const dataChartRegex = /\[DATA_CHART\]([\s\S]*?)\[\/DATA_CHART\]/g;
+
+                    let mainText = msg.text || '';
+
+                    // Step 1: Extract special components and replace them with placeholders
+                    mainText = mainText.replace(interactiveUIRegex, (match, jsonString) => {
+                        try { interactiveComponentData = JSON.parse(jsonString); } catch (e) { console.error("Failed to parse interactive UI JSON", e); }
+                        return ''; 
+                    });
+
+                    const chartPlaceholders = [];
+                    mainText = mainText.replace(dataChartRegex, (match, jsonString) => {
+                        const chartId = `chart-${index}-${chartPlaceholders.length}`;
+                        chartPlaceholders.push({ id: chartId, json: jsonString });
+                        
+                        // Create the HTML structure for the chart
+                        try {
+                            const chartData = JSON.parse(jsonString);
+                            let chartHtml = `<div class="chart-title">${chartData.title || ''}</div>`;
+                            if (chartData.type === 'line' || chartData.type === 'bar') {
+                                const minWidth = chartData.data.length * 60;
+                                chartHtml += `<div class="chart-scroll-container"><div class="chart-render-area" style="min-width: ${minWidth}px; height: 240px;"><canvas id="${chartId}"></canvas></div></div>`;
+                            } else { // pie chart
+                                chartHtml += `<div class="chart-render-area" style="height: 280px; max-width: 400px; margin: auto;"><canvas id="${chartId}"></canvas></div>`;
+                            }
+                            return chartHtml;
+                        } catch(e) { return ''; }
+                    });
+
+                    // Step 2: Render main content
+                    let contentContainer = document.createElement('div');
+
+                    if (msg.type === 'image_generated' && msg.imageUri) {
+                        contentContainer.innerHTML = `<img src="${msg.imageUri}" alt="AI Generated Image" class="message-image">`;
+                    } else if (msg.imageUri) {
+                        contentContainer.innerHTML = `<div class="placeholder"><span class="placeholder-icon">🖼️</span> <span class="placeholder-text">[Image Sent]</span></div>`;
+                    } else if (msg.fileInfo) {
+                        contentContainer.innerHTML = `<div class="placeholder"><span class="placeholder-icon">📄</span> <span class="placeholder-text">[File Sent: ${msg.fileInfo.name}]</span></div>`;
+                    } else if (mainText.trim()) {
+                        const textWithDiagrams = mainText.replace(mermaidRegex, (match, diagramCode) => {
+                            return `<pre class="mermaid">${diagramCode.trim()}</pre>`;
+                        });
+                        contentContainer.innerHTML = marked.parse(textWithDiagrams);
+                    } else if (msg.type === 'image_generating') {
+                         contentContainer.innerHTML = `<div class="placeholder"><span class="placeholder-icon">⏳</span> <span class="placeholder-text">[AI is generating an image...]</span></div>`;
+                    }
+                    
+                    bubbleDiv.appendChild(contentContainer);
+
+                    // Step 3: Append interactive UI if it exists
+                    if (interactiveComponentData) {
+                        const uiElement = renderInteractiveUI(interactiveComponentData);
+                        if (uiElement) {
+                            bubbleDiv.appendChild(uiElement);
+                        }
+                    }
+
+                    // Step 4: Enhance web search results styling
+                    if (msg.sender === 'bot') {
+                        enhanceWebSearchResults(bubbleDiv);
+                    }
+                    
+                    messageDiv.appendChild(bubbleDiv);
+                    chatContainer.appendChild(messageDiv);
+
+                    // Step 5: Render the charts now that their canvas elements are in the DOM
+                    chartPlaceholders.forEach(placeholder => {
+                        renderDataChart(placeholder.id, placeholder.json);
+                    });
+                });
+                
+                await renderMermaidDiagrams();
+                buildPromoBanner();
+                buildFooter();
+
+            } catch (error) {
+                chatContainer.innerHTML = `<div class="loading" style="color: #ff5c5c;">Error: Failed to fetch conversation.<br>(The server may be overloaded, or the link may have expired)</div>`;
+                console.error("Failed to load chat:", error);
+            }
+        }
+
+        // --- SCRIPT EXECUTION STARTS HERE ---
+        setupThemeSwitcher();
+        applyTheme(localStorage.getItem('theme') || 'dark');
+        window.onload = fetchAndDisplayChat;
     </script>
 </body>
 </html>
