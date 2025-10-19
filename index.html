@@ -431,7 +431,24 @@
                 buildFooter();
 
             } catch (error) {
-                chatContainer.innerHTML = `<div class="loading" style="color: #ff5c5c;">Error: Failed to fetch conversation.<br>(The server may be overloaded, or the link may have expired)</div>`;
+               chatContainer.innerHTML = `
+<div class="loading" style="color:#ff5c5c;">
+  Error: Failed to fetch conversation.<br>
+  (The server may be overloaded, or the link may have expired)
+  <span class="face">(╯︵╰,)</span>
+</div>
+<style>
+  .face {
+    display:inline-block;
+    animation: bounceY 0.8s infinite ease-in-out alternate;
+  }
+  @keyframes bounceY {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-6px); }
+  }
+</style>
+`;
+
                 console.error("Failed to load chat:", error);
             }
         }
