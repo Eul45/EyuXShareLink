@@ -196,6 +196,32 @@
             document.querySelector('meta[name="twitter:url"]').setAttribute('content', pageUrl);
         }
 
+        function renderFlashcardSet(flashcardSet) {
+            const container = document.createElement('div');
+            container.className = 'flashcard-container';
+            container.style.cssText = 'background: var(--interactive-bg); border: 1px solid var(--interactive-border); border-radius: 12px; padding: 20px; margin: 15px 0;';
+            
+            const header = document.createElement('div');
+            header.style.cssText = 'display: flex; align-items: center; gap: 10px; margin-bottom: 15px;';
+            header.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" style="color: #FF3B30;">
+                    <path d="M1.5 0A1.5 1.5 0 0 0 0 1.5v13A1.5 1.5 0 0 0 1.5 16h13a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 14.5 0h-13z"/>
+                </svg>
+                <div>
+                    <div style="font-weight: 600; color: var(--text-color);">${flashcardSet.title}</div>
+                    <div style="font-size: 0.85em; color: var(--text-muted);">${flashcardSet.cards.length} flashcards · ${flashcardSet.source}</div>
+                </div>
+            `;
+            container.appendChild(header);
+            
+            const info = document.createElement('div');
+            info.style.cssText = 'font-size: 0.9em; color: var(--text-muted); padding: 10px; background: var(--interactive-btn-bg); border-radius: 8px; text-align: center;';
+            info.textContent = '📚 Flashcards are interactive in the EyuX app. Continue this conversation to study them!';
+            container.appendChild(info);
+            
+            return container;
+        }
+        
         function renderInteractiveUI(component) {
             if (!component || !component.type) return null;
 
@@ -318,6 +344,7 @@
                 if (!response.ok) throw new Error("Could not fetch chat data.");
                 
                 const conversation = await response.json();
+                const flashcards = conversation.flashcards || [];
                 
                 updateMetaTags(conversation.title);
 
@@ -419,6 +446,15 @@
                     // Step 4: Enhance web search results styling
                     if (msg.sender === 'bot') {
                         enhanceWebSearchResults(bubbleDiv);
+                    }
+                    
+                    // Step 5: Render flashcards if this message has a flashcard set
+                    if (msg.flashcardSetId && msg.sender === 'bot') {
+                        const flashcardSet = flashcards.find(set => set.id === msg.flashcardSetId);
+                        if (flashcardSet) {
+                            const flashcardElement = renderFlashcardSet(flashcardSet);
+                            bubbleDiv.appendChild(flashcardElement);
+                        }
                     }
                     
                     messageDiv.appendChild(bubbleDiv);
