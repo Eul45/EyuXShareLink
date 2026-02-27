@@ -1,4 +1,747 @@
-<!doctype html><html lang=en><meta charset=UTF-8><meta content="width=device-width,initial-scale=1"name=viewport><link href=favicon.png rel=icon type=image/png><title>EyuX Chat Viewer</title><meta content=website property=og:type><meta content=https://eul45.github.io/EyuXShareLink/ property=og:url><meta content="EyuX - Chat Share"property=og:title><meta content="Shared via EyuX AI"property=og:description><meta content=https://raw.githubusercontent.com/Eul45/EyuXShareLink/643d29d4e4c6f0db76676dec23d8e401a5197894/icon.png property=og:image><meta content=summary name=twitter:card><meta content=https://eul45.github.io/EyuXShareLink/ name=twitter:url><meta content="EyuX - Chat Share"name=twitter:title><meta content="Shared via EyuX AI"name=twitter:description><meta content=https://raw.githubusercontent.com/Eul45/EyuXShareLink/643d29d4e4c6f0db76676dec23d8e401a5197894/icon.png name=twitter:image><meta property="og:site_name" content="EyuX"><script src=https://cdn.jsdelivr.net/npm/marked/marked.min.js></script><script src=https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js></script><script src=https://cdn.jsdelivr.net/npm/chart.js></script><style>:root,body[data-theme=dark]{--bg-color:#121212;--container-bg:#1c1c1c;--text-color:#EAEAEA;--text-muted:#888;--border-color:#333;--bot-bubble-bg:#1c1c1c;--user-bubble-bg:#333333;--placeholder-bg:#3a3a3a;--header-text:#FFFFFF;--link-color:#58a6ff;--interactive-bg:rgba(255, 255, 255, 0.03);--interactive-border:rgba(255, 255, 255, 0.1);--interactive-btn-bg:rgba(255, 255, 255, 0.05);--interactive-btn-border:rgba(255, 255, 255, 0.2);--interactive-btn-primary-bg:#007AFF;--interactive-btn-primary-text:#FFFFFF;--interactive-btn-danger-bg:#FF3B30;--chart-grid-color:rgba(255, 255, 255, 0.1);--chart-label-color:#AAAAAA;--chart-tooltip-bg:#000}body[data-theme=light]{--bg-color:#f0f2f5;--container-bg:#ffffff;--text-color:#1c1c1e;--text-muted:#65676b;--border-color:#e0e0e0;--bot-bubble-bg:#FFFFFF;--user-bubble-bg:#f5f5f5;--placeholder-bg:#e5e5ea;--header-text:#1c1c1e;--link-color:#007AFF;--interactive-bg:rgba(0, 0, 0, 0.02);--interactive-border:rgba(0, 0, 0, 0.08);--interactive-btn-bg:rgba(0, 0, 0, 0.03);--interactive-btn-border:rgba(0, 0, 0, 0.1);--interactive-btn-primary-bg:#007AFF;--interactive-btn-primary-text:#FFFFFF;--interactive-btn-danger-bg:#FF3B30;--chart-grid-color:rgba(0, 0, 0, 0.1);--chart-label-color:#555555;--chart-tooltip-bg:#fff}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background-color:var(--bg-color);color:var(--text-color);margin:0;padding:15px;transition:background-color .3s,color .3s}.chat-container{max-width:800px;margin:0 auto;border:1px solid var(--border-color);border-radius:12px;padding:20px;background-color:var(--container-bg);transition:background-color .3s,border-color .3s}.chat-container>.chat-header{position:relative;text-align:center;border-bottom:1px solid var(--border-color);padding-bottom:15px;margin-bottom:25px;background-color:var(--container-bg);transition:border-color .3s,background-color .3s}.chat-container>.chat-header h1{margin:0;font-size:24px;color:var(--header-text);transition:color .3s}.chat-container>.chat-header p{margin:5px 0 0;color:var(--text-muted);font-size:14px}.theme-switcher{position:absolute;top:-5px;right:0;background:0 0;border:none;cursor:pointer;padding:10px;border-radius:50%;display:flex;align-items:center;justify-content:center}.theme-switcher:hover{background-color:rgba(128,128,128,.1)}.theme-switcher svg{width:24px;height:24px;fill:var(--text-muted)}.icon-moon,.icon-sun{display:none}.message{display:flex;flex-direction:column;margin-bottom:20px}.bubble{padding:12px 18px;border-radius:20px;line-height:1.6;max-width:85%;overflow-wrap:break-word;border:1px solid var(--border-color);transition:background-color .3s,color .3s,border-color .3s}.user{align-items:flex-end}.user .bubble{background-color:var(--user-bubble-bg);color:var(--text-color);border-bottom-right-radius:5px}.bot{align-items:flex-start}.bot .bubble{background-color:var(--bot-bubble-bg);color:var(--text-color);border-bottom-left-radius:5px;border:none}.loading{text-align:center;font-size:18px;color:var(--text-muted);padding:40px 0}.message-image{width:100%;max-width:400px;border-radius:15px;margin-top:8px}.placeholder{display:flex;align-items:center;gap:10px;background-color:var(--placeholder-bg);padding:10px 15px;border-radius:12px;border:1px solid var(--border-color)}.placeholder-icon{font-size:24px}.placeholder-text{font-style:italic;color:var(--text-muted)}.mermaid{background-color:#fff;padding:15px;border-radius:8px;margin:10px 0;text-align:center}.bubble p{margin:0 0 10px 0}.bubble p:last-child{margin-bottom:0}.bubble pre{background-color:rgba(0,0,0,.2);padding:12px;border-radius:8px;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word;border:1px solid var(--border-color)}.bubble code{font-family:'Courier New',Courier,monospace;font-size:14px}.interactive-container{margin-top:12px;padding:16px;border-radius:12px;border:1px solid var(--interactive-border);background-color:var(--interactive-bg)}.interactive-button-group{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.interactive-button-group.vertical{flex-direction:column}.interactive-button{padding:10px 16px;border-radius:20px;border:1px solid var(--interactive-btn-border);background-color:var(--interactive-btn-bg);font-size:14px;font-weight:500;cursor:not-allowed;opacity:.7;color:var(--text-color);text-align:center}.interactive-button.primary{background-color:var(--interactive-btn-primary-bg);border-color:var(--interactive-btn-primary-bg);color:var(--interactive-btn-primary-text)}.interactive-button.danger{background-color:var(--interactive-btn-danger-bg);border-color:var(--interactive-btn-danger-bg);color:var(--interactive-btn-primary-text)}.interactive-button-group.vertical .interactive-button{width:100%;box-sizing:border-box}.interactive-poll-title{font-size:16px;font-weight:600;margin-bottom:12px;color:var(--text-color)}.interactive-poll-option{display:flex;align-items:center;padding:12px;margin:4px 0;border-radius:8px;border:1px solid var(--interactive-btn-border);background-color:var(--interactive-btn-bg);cursor:not-allowed;opacity:.7}.poll-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--text-muted);margin-right:12px}.poll-option-text{font-size:14px;color:var(--text-color)}.poll-vote-button{margin-top:12px;width:100%;box-sizing:border-box}.promo-note{text-align:center;padding:15px 10px;margin-top:30px;border-top:1px solid var(--border-color);font-size:14px;color:var(--text-muted);line-height:1.5}.promo-note a{color:var(--link-color);font-weight:600;text-decoration:none}.promo-note a:hover{text-decoration:underline}.page-footer{max-width:800px;margin:25px auto 0;padding:20px;text-align:center;color:var(--text-muted)}.footer-copyright{font-size:14px;margin-bottom:15px}.social-links{display:flex;justify-content:center;gap:20px}.social-links a{color:var(--text-muted);text-decoration:none;transition:color .2s ease-in-out}.social-links a:hover{color:var(--text-color)}.social-links svg{width:24px;height:24px;fill:currentColor}.copy-note{margin:2px 0 0;font-size:12px;color:var(--text-muted);font-style:italic}.sources-container{margin-top:12px}.sources-header{font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}.sources-scroll-wrapper{overflow-x:auto;padding-bottom:10px;white-space:nowrap;-webkit-overflow-scrolling:touch}.source-card{display:inline-flex;flex-direction:column;width:220px;height:110px;border-radius:12px;margin-right:12px;padding:12px;background-color:var(--interactive-bg);border:1px solid var(--interactive-border);vertical-align:top;text-decoration:none;transition:background-color .2s,border-color .2s;position:relative;white-space:normal}.source-card:hover{background-color:var(--interactive-btn-bg);border-color:var(--interactive-btn-border)}.source-card-favicon{width:24px;height:24px;border-radius:4px;margin-bottom:8px;background-color:var(--placeholder-bg)}.source-card-text{flex-grow:1;overflow:hidden}.source-card-title{font-size:14px;font-weight:600;color:var(--text-color);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}.source-card-domain{font-size:12px;color:var(--text-muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.source-card-index{position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;background-color:var(--interactive-btn-bg);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text-color)}.citation-badge{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background-color:var(--interactive-btn-bg);border:1px solid var(--interactive-btn-border);color:var(--text-color);font-size:12px;font-weight:600;text-decoration:none;margin:0 2px;vertical-align:middle;transform:translateY(-1px);transition:background-color .2s}.citation-badge:hover{background-color:var(--interactive-btn-border)}.chart-title{font-size:16px;font-weight:600;color:var(--text-color);margin-bottom:10px;text-align:center}.chart-scroll-container{overflow-x:auto;margin:10px 0}.chart-render-area{position:relative}@keyframes pulse-new-tag{0%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,59,48,.7)}70%{transform:scale(1.1);box-shadow:0 0 0 10px rgba(255,59,48,0)}100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,59,48,0)}}.new-tag{position:absolute;top:-10px;right:-10px;background-color:#ff3b30;color:#fff;font-size:11px;font-weight:700;padding:3px 7px;border-radius:10px;border:2px solid #fff;animation:pulse-new-tag 2s infinite}
+<!doctype html><html lang=en><meta charset=UTF-8><meta content="width=device-width,initial-scale=1"name=viewport><link href=favicon.png rel=icon type=image/png><title>EyuX Chat Viewer</title><meta content=website property=og:type><meta content=https://eul45.github.io/EyuXShareLink/ property=og:url><meta content="EyuX - Chat Share"property=og:title><meta content="Shared via EyuX AI"property=og:description><meta content=https://raw.githubusercontent.com/Eul45/EyuXShareLink/643d29d4e4c6f0db76676dec23d8e401a5197894/icon.png property=og:image><meta content=summary name=twitter:card><meta content=https://eul45.github.io/EyuXShareLink/ name=twitter:url><meta content="EyuX - Chat Share"name=twitter:title><meta content="Shared via EyuX AI"name=twitter:description><meta content=https://raw.githubusercontent.com/Eul45/EyuXShareLink/643d29d4e4c6f0db76676dec23d8e401a5197894/icon.png name=twitter:image><meta property="og:site_name" content="EyuX"><script src=https://cdn.jsdelivr.net/npm/marked/marked.min.js></script><script src=https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js></script><script src=https://cdn.jsdelivr.net/npm/chart.js></script><style>
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap");
+
+:root,
+body[data-theme=dark] {
+  --bg-color: #090d14;
+  --bg-accent: radial-gradient(1200px 800px at 10% -10%, rgba(18, 138, 255, 0.24), transparent 60%),
+    radial-gradient(900px 700px at 100% 0%, rgba(45, 211, 183, 0.18), transparent 62%),
+    linear-gradient(180deg, #0a0f17 0%, #070b12 100%);
+  --container-bg: linear-gradient(180deg, rgba(20, 27, 40, 0.96) 0%, rgba(11, 16, 25, 0.96) 100%);
+  --surface-bg: rgba(255, 255, 255, 0.035);
+  --text-color: #e7edf7;
+  --text-muted: #94a0b8;
+  --border-color: rgba(255, 255, 255, 0.12);
+  --bot-bubble-bg: linear-gradient(180deg, rgba(36, 47, 68, 0.86), rgba(25, 35, 53, 0.86));
+  --user-bubble-bg: linear-gradient(145deg, rgba(15, 132, 255, 0.25), rgba(0, 94, 199, 0.2));
+  --placeholder-bg: rgba(255, 255, 255, 0.06);
+  --header-text: #f5f8ff;
+  --link-color: #67bcff;
+  --interactive-bg: rgba(255, 255, 255, 0.04);
+  --interactive-border: rgba(255, 255, 255, 0.12);
+  --interactive-btn-bg: rgba(255, 255, 255, 0.06);
+  --interactive-btn-border: rgba(255, 255, 255, 0.22);
+  --interactive-btn-primary-bg: #0f86ff;
+  --interactive-btn-primary-text: #ffffff;
+  --interactive-btn-danger-bg: #ff4a4a;
+  --chart-grid-color: rgba(255, 255, 255, 0.16);
+  --chart-label-color: #9aa9c3;
+  --chart-tooltip-bg: #0e1522;
+  --code-bg: #0e1522;
+  --shadow-soft: 0 14px 34px rgba(3, 8, 18, 0.45);
+  --shadow-hard: 0 24px 46px rgba(3, 8, 18, 0.55);
+}
+
+body[data-theme=light] {
+  --bg-color: #edf3ff;
+  --bg-accent: radial-gradient(1200px 700px at 8% -10%, rgba(43, 128, 255, 0.24), transparent 60%),
+    radial-gradient(900px 650px at 100% 2%, rgba(20, 195, 168, 0.2), transparent 62%),
+    linear-gradient(180deg, #f2f7ff 0%, #e8eefb 100%);
+  --container-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(247, 251, 255, 0.96) 100%);
+  --surface-bg: rgba(14, 42, 83, 0.03);
+  --text-color: #132033;
+  --text-muted: #5f708c;
+  --border-color: rgba(32, 74, 128, 0.15);
+  --bot-bubble-bg: linear-gradient(180deg, #ffffff, #f7fbff);
+  --user-bubble-bg: linear-gradient(145deg, rgba(50, 132, 255, 0.16), rgba(0, 104, 216, 0.1));
+  --placeholder-bg: rgba(17, 48, 86, 0.06);
+  --header-text: #132441;
+  --link-color: #0b6de1;
+  --interactive-bg: rgba(15, 56, 107, 0.04);
+  --interactive-border: rgba(19, 63, 118, 0.12);
+  --interactive-btn-bg: rgba(19, 63, 118, 0.06);
+  --interactive-btn-border: rgba(19, 63, 118, 0.18);
+  --interactive-btn-primary-bg: #0a74ec;
+  --interactive-btn-primary-text: #ffffff;
+  --interactive-btn-danger-bg: #e63b3b;
+  --chart-grid-color: rgba(11, 40, 82, 0.12);
+  --chart-label-color: #4b607d;
+  --chart-tooltip-bg: #ffffff;
+  --code-bg: #eef4ff;
+  --shadow-soft: 0 14px 32px rgba(41, 75, 126, 0.13);
+  --shadow-hard: 0 24px 46px rgba(41, 75, 126, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  font-family: "Manrope", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg-accent);
+  color: var(--text-color);
+  margin: 0;
+  padding: 22px 16px;
+  letter-spacing: 0.01em;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+.chat-container {
+  max-width: 880px;
+  margin: 0 auto;
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 24px 24px 16px;
+  background: var(--container-bg);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-hard);
+  transition: background-color 0.35s ease, border-color 0.35s ease;
+}
+
+.chat-container > .chat-header {
+  position: relative;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+  padding: 8px 52px 18px;
+  margin-bottom: 24px;
+  background: transparent;
+  transition: border-color 0.35s ease;
+}
+
+.chat-container > .chat-header h1 {
+  margin: 0;
+  font-size: clamp(24px, 4vw, 32px);
+  line-height: 1.2;
+  font-weight: 800;
+  color: var(--header-text);
+  letter-spacing: -0.02em;
+  transition: color 0.35s ease;
+}
+
+.chat-container > .chat-header p {
+  margin: 8px 0 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.theme-switcher {
+  position: absolute;
+  top: -2px;
+  right: 0;
+  background: var(--surface-bg);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  padding: 9px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-switcher:hover {
+  transform: translateY(-1px);
+  background-color: var(--interactive-btn-bg);
+}
+
+.theme-switcher svg {
+  width: 21px;
+  height: 21px;
+  fill: var(--text-muted);
+}
+
+.icon-moon,
+.icon-sun {
+  display: none;
+}
+
+.continue-chat-btn {
+  width: min(360px, 100%);
+  margin: -8px auto 26px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 20px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #0d8bff 0%, #0a6ce4 100%);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow: 0 12px 26px rgba(13, 139, 255, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.continue-chat-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(13, 139, 255, 0.5);
+  filter: brightness(1.04);
+}
+
+.continue-chat-btn .btn-icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+}
+
+@keyframes pulse-new-tag {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.65);
+  }
+
+  70% {
+    transform: scale(1.08);
+    box-shadow: 0 0 0 12px rgba(255, 59, 48, 0);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 59, 48, 0);
+  }
+}
+
+.new-tag {
+  position: absolute;
+  top: -11px;
+  right: -8px;
+  background-color: #ff3b30;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 2px solid var(--bg-color);
+  animation: pulse-new-tag 2s infinite;
+  letter-spacing: 0.03em;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  gap: 8px;
+}
+
+.bubble {
+  position: relative;
+  padding: 15px 17px;
+  border-radius: 18px;
+  line-height: 1.72;
+  max-width: min(88%, 680px);
+  overflow-wrap: anywhere;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease;
+}
+
+.user {
+  align-items: flex-end;
+}
+
+.user .bubble {
+  background: var(--user-bubble-bg);
+  border-bottom-right-radius: 6px;
+  border-color: rgba(48, 137, 255, 0.45);
+}
+
+.bot {
+  align-items: flex-start;
+}
+
+.bot .bubble {
+  background: var(--bot-bubble-bg);
+  border-bottom-left-radius: 6px;
+}
+
+.bubble > :first-child {
+  margin-top: 0;
+}
+
+.bubble > :last-child {
+  margin-bottom: 0;
+}
+
+.bubble p {
+  margin: 0 0 0.75em;
+}
+
+.bubble h1,
+.bubble h2,
+.bubble h3,
+.bubble h4 {
+  margin: 1.1em 0 0.5em;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--header-text);
+}
+
+.bubble h1 {
+  font-size: 1.45rem;
+}
+
+.bubble h2 {
+  font-size: 1.25rem;
+}
+
+.bubble h3 {
+  font-size: 1.12rem;
+}
+
+.bubble ul,
+.bubble ol {
+  margin: 0.2em 0 0.95em;
+  padding-left: 1.2em;
+}
+
+.bubble li {
+  margin: 0.3em 0;
+}
+
+.bubble blockquote {
+  margin: 0.9em 0;
+  padding: 0.6em 0.9em;
+  border-left: 3px solid rgba(90, 170, 255, 0.8);
+  border-radius: 10px;
+  background: var(--interactive-bg);
+  color: var(--text-muted);
+}
+
+.bubble hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 1.1em 0;
+}
+
+.bubble a {
+  color: var(--link-color);
+  text-underline-offset: 2px;
+  font-weight: 600;
+}
+
+.bubble table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.8em 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--interactive-border);
+}
+
+.bubble th,
+.bubble td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--interactive-border);
+  text-align: left;
+  font-size: 0.95em;
+}
+
+.bubble th {
+  background: var(--interactive-btn-bg);
+  font-weight: 700;
+}
+
+.bubble tr:last-child td {
+  border-bottom: none;
+}
+
+.bubble pre {
+  background: var(--code-bg);
+  padding: 13px 14px;
+  border-radius: 12px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  border: 1px solid var(--interactive-border);
+  margin: 0.9em 0;
+}
+
+.bubble code {
+  font-family: "JetBrains Mono", Consolas, "Courier New", monospace;
+  font-size: 13px;
+}
+
+.bubble :not(pre) > code {
+  background: var(--interactive-btn-bg);
+  border: 1px solid var(--interactive-border);
+  border-radius: 7px;
+  padding: 0.1em 0.35em;
+}
+
+.loading {
+  text-align: center;
+  font-size: 18px;
+  color: var(--text-muted);
+  padding: 48px 0;
+}
+
+.message-image {
+  width: 100%;
+  max-width: min(460px, 100%);
+  border-radius: 14px;
+  margin-top: 4px;
+  border: 1px solid var(--interactive-border);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--placeholder-bg);
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--interactive-border);
+}
+
+.placeholder-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.placeholder-text {
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.mermaid {
+  background: var(--code-bg);
+  padding: 14px;
+  border-radius: 10px;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.interactive-container {
+  margin-top: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--interactive-border);
+  background-color: var(--interactive-bg);
+}
+
+.interactive-button-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.interactive-button-group.vertical {
+  flex-direction: column;
+}
+
+.interactive-button {
+  padding: 10px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--interactive-btn-border);
+  background-color: var(--interactive-btn-bg);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: not-allowed;
+  opacity: 0.78;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.interactive-button.primary {
+  background-color: var(--interactive-btn-primary-bg);
+  border-color: var(--interactive-btn-primary-bg);
+  color: var(--interactive-btn-primary-text);
+}
+
+.interactive-button.danger {
+  background-color: var(--interactive-btn-danger-bg);
+  border-color: var(--interactive-btn-danger-bg);
+  color: var(--interactive-btn-primary-text);
+}
+
+.interactive-button-group.vertical .interactive-button {
+  width: 100%;
+}
+
+.interactive-poll-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text-color);
+}
+
+.interactive-poll-option {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  margin: 4px 0;
+  border-radius: 8px;
+  border: 1px solid var(--interactive-btn-border);
+  background-color: var(--interactive-btn-bg);
+  cursor: not-allowed;
+  opacity: 0.78;
+}
+
+.poll-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--text-muted);
+  margin-right: 12px;
+}
+
+.poll-option-text {
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.poll-vote-button {
+  margin-top: 12px;
+  width: 100%;
+}
+
+.copy-note {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.sources-container {
+  margin-top: 14px;
+}
+
+.sources-header {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sources-scroll-wrapper {
+  overflow-x: auto;
+  padding-bottom: 8px;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.source-card {
+  display: inline-flex;
+  flex-direction: column;
+  width: 220px;
+  height: 110px;
+  border-radius: 14px;
+  margin-right: 10px;
+  padding: 12px;
+  background: var(--interactive-bg);
+  border: 1px solid var(--interactive-border);
+  vertical-align: top;
+  text-decoration: none;
+  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  position: relative;
+  white-space: normal;
+}
+
+.source-card:hover {
+  transform: translateY(-2px);
+  background: var(--interactive-btn-bg);
+  border-color: var(--interactive-btn-border);
+}
+
+.source-card-favicon {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  background-color: var(--placeholder-bg);
+}
+
+.source-card-text {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.source-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-color);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.35;
+}
+
+.source-card-domain {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.source-card-index {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 21px;
+  height: 21px;
+  border-radius: 999px;
+  background-color: var(--interactive-btn-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.citation-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--interactive-btn-bg);
+  border: 1px solid var(--interactive-btn-border);
+  color: var(--text-color);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  margin: 0 2px;
+  vertical-align: middle;
+  transform: translateY(-1px);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.citation-badge:hover {
+  transform: translateY(-2px);
+  background-color: var(--interactive-btn-border);
+}
+
+.chart-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.chart-scroll-container {
+  overflow-x: auto;
+  margin: 8px 0;
+}
+
+.chart-render-area {
+  position: relative;
+}
+
+.promo-note {
+  text-align: center;
+  padding: 17px 10px 9px;
+  margin-top: 26px;
+  border-top: 1px solid var(--border-color);
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.promo-note a {
+  color: var(--link-color);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.promo-note a:hover {
+  text-decoration: underline;
+}
+
+.page-footer {
+  max-width: 880px;
+  margin: 18px auto 0;
+  padding: 18px 10px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.footer-copyright {
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.social-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.social-links a:hover {
+  color: var(--text-color);
+  transform: translateY(-2px);
+}
+
+.social-links svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 14px 12px;
+  }
+
+  .chat-container {
+    border-radius: 16px;
+    padding: 18px 14px 12px;
+  }
+
+  .chat-container > .chat-header {
+    padding: 2px 42px 14px;
+    margin-bottom: 18px;
+  }
+
+  .continue-chat-btn {
+    font-size: 18px;
+    padding: 12px 16px;
+  }
+
+  .bubble {
+    max-width: 94%;
+    padding: 13px 13px;
+  }
+
+  .source-card {
+    width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-container > .chat-header h1 {
+    font-size: 22px;
+  }
+
+  .theme-switcher {
+    padding: 8px;
+  }
+
+  .continue-chat-btn {
+    font-size: 16px;
+  }
+
+  .continue-chat-btn .btn-icon {
+    width: 19px;
+    height: 19px;
+  }
+}
 </style><body data-theme=dark><div class=chat-container id=chat-container><div class=loading>Loading conversation...</div></div><footer class=page-footer id=page-footer></footer><script>const chatContainer = document.getElementById('chat-container');
         const pageFooter = document.getElementById('page-footer');
         const themeSwitch = document.createElement('button');
@@ -6,6 +749,7 @@
         let activeCharts = [];
 
         mermaid.initialize({ startOnLoad: false });
+        marked.setOptions({ gfm: true, breaks: true, mangle: false, headerIds: false });
 
         function setupThemeSwitcher() {
             themeSwitch.className = 'theme-switcher';
@@ -209,14 +953,14 @@
                 </svg>
                 <div>
                     <div style="font-weight: 600; color: var(--text-color);">${flashcardSet.title}</div>
-                    <div style="font-size: 0.85em; color: var(--text-muted);">${flashcardSet.cards.length} flashcards · ${flashcardSet.source}</div>
+                    <div style="font-size: 0.85em; color: var(--text-muted);">${flashcardSet.cards.length} flashcards � ${flashcardSet.source}</div>
                 </div>
             `;
             container.appendChild(header);
             
             const info = document.createElement('div');
             info.style.cssText = 'font-size: 0.9em; color: var(--text-muted); padding: 10px; background: var(--interactive-btn-bg); border-radius: 8px; text-align: center;';
-            info.textContent = '📚 Flashcards are interactive in the EyuX app. Continue this conversation to study them!';
+            info.textContent = '?? Flashcards are interactive in the EyuX app. Continue this conversation to study them!';
             container.appendChild(info);
             
             return container;
@@ -353,15 +1097,13 @@
                       // --- START: NEW CODE TO ADD THE "CONTINUE" BUTTON ---
             const mainAppUrl = `https://www.eyux.com.et/?continueChatId=${chatId}`;
            const continueButtonHTML = `
-    <a href="${mainAppUrl}" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; text-decoration: none; background-color: #007AFF; color: white; padding: 12px 20px; border-radius: 25px; font-weight: 600; margin: -10px auto 25px; max-width: 300px; position: relative;">
-        <!-- The "NEW" tag is added here -->
+    <a href="${mainAppUrl}" target="_blank" rel="noopener noreferrer" class="continue-chat-btn" aria-label="Continue this conversation in EyuX">
         <span class="new-tag">NEW</span>
-
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px;">
+        <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
             <path d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
             <path d="M1 8a.5.5 0 0 1 .5-.5h3.5a.5.5 0 0 1 0 1H1.5A.5.5 0 0 1 1 8z"/>
         </svg>
-        Continue this Conversation
+        <span>Continue this Conversation</span>
     </a>
 `;
             // --- END: NEW CODE ---
@@ -421,16 +1163,16 @@
                     if (msg.type === 'image_generated' && msg.imageUri) {
                         contentContainer.innerHTML = `<img src="${msg.imageUri}" alt="AI Generated Image" class="message-image">`;
                     } else if (msg.imageUri) {
-                        contentContainer.innerHTML = `<div class="placeholder"><span class="placeholder-icon">🖼️</span> <span class="placeholder-text">[Image Sent]</span></div>`;
+                        contentContainer.innerHTML = `<div class="placeholder"><span class="placeholder-icon">???</span> <span class="placeholder-text">[Image Sent]</span></div>`;
                     } else if (msg.fileInfo) {
-                        contentContainer.innerHTML = `<div class="placeholder"><span class="placeholder-icon">📄</span> <span class="placeholder-text">[File Sent: ${msg.fileInfo.name}]</span></div>`;
+                        contentContainer.innerHTML = `<div class="placeholder"><span class="placeholder-icon">??</span> <span class="placeholder-text">[File Sent: ${msg.fileInfo.name}]</span></div>`;
                     } else if (mainText.trim()) {
                         const textWithDiagrams = mainText.replace(mermaidRegex, (match, diagramCode) => {
                             return `<pre class="mermaid">${diagramCode.trim()}</pre>`;
                         });
                         contentContainer.innerHTML = marked.parse(textWithDiagrams);
                     } else if (msg.type === 'image_generating') {
-                         contentContainer.innerHTML = `<div class="placeholder"><span class="placeholder-icon">⏳</span> <span class="placeholder-text">[AI is generating an image...]</span></div>`;
+                         contentContainer.innerHTML = `<div class="placeholder"><span class="placeholder-icon">?</span> <span class="placeholder-text">[AI is generating an image...]</span></div>`;
                     }
                     
                     bubbleDiv.appendChild(contentContainer);
@@ -475,7 +1217,7 @@
 <div class="loading" style="color:#ff5c5c; text-align:center; font-family:monospace;">
   Error: Failed to fetch conversation.<br>
   (The server may be overloaded, or the link may have expired)
-  <span class="face">(╥‸╥)</span>
+  <span class="face">(-?-)</span>
   <div class="logo-container">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
       <g transform="translate(0, 300) scale(0.13, -0.13)" fill="#ff5c5c">
