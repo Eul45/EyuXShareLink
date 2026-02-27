@@ -7,6 +7,147 @@
 
         mermaid.initialize({ startOnLoad: false });
 
+        function injectCodeBlockStyles() {
+            if (document.getElementById('eyux-share-codeblock-style')) return;
+
+            const style = document.createElement('style');
+            style.id = 'eyux-share-codeblock-style';
+            style.textContent = `
+                .eyux-codeblock {
+                    margin: 12px 0;
+                    border: 1px solid var(--interactive-border);
+                    border-radius: 14px;
+                    overflow: hidden;
+                    background: #10131a;
+                }
+                .eyux-codeblock-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 10px;
+                    padding: 9px 12px;
+                    background: #0c0f15;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                }
+                .eyux-codeblock-lang {
+                    font-size: 12px;
+                    font-weight: 700;
+                    letter-spacing: 0.08em;
+                    text-transform: uppercase;
+                    color: #d7dbe8;
+                }
+                .eyux-codeblock-copy {
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    background: rgba(255, 255, 255, 0.05);
+                    color: #d7dbe8;
+                    border-radius: 999px;
+                    padding: 4px 10px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    line-height: 1.2;
+                    cursor: pointer;
+                }
+                .eyux-codeblock-copy:hover {
+                    background: rgba(255, 255, 255, 0.12);
+                }
+                .eyux-codeblock-body {
+                    margin: 0;
+                    padding: 14px;
+                    overflow-x: auto;
+                    background: #11141b;
+                    color: #d4d4d4;
+                    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+                    font-size: 13px;
+                    line-height: 1.5;
+                    white-space: pre;
+                    word-break: normal;
+                }
+                body[data-theme="light"] .eyux-codeblock {
+                    background: #f8fbff;
+                    border-color: rgba(0, 0, 0, 0.08);
+                }
+                body[data-theme="light"] .eyux-codeblock-header {
+                    background: #eef3fb;
+                    border-bottom-color: rgba(0, 0, 0, 0.08);
+                }
+                body[data-theme="light"] .eyux-codeblock-lang,
+                body[data-theme="light"] .eyux-codeblock-copy {
+                    color: #1f2b46;
+                }
+                body[data-theme="light"] .eyux-codeblock-copy {
+                    background: rgba(0, 0, 0, 0.04);
+                    border-color: rgba(0, 0, 0, 0.14);
+                }
+                body[data-theme="light"] .eyux-codeblock-copy:hover {
+                    background: rgba(0, 0, 0, 0.09);
+                }
+                body[data-theme="light"] .eyux-codeblock-body {
+                    background: #f4f8ff;
+                    color: #1c2946;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        function normalizeCodeLanguage(language) {
+            const normalized = String(language || '').trim().toLowerCase();
+            if (!normalized) return 'plaintext';
+            if (normalized === 'js') return 'javascript';
+            if (normalized === 'ts') return 'typescript';
+            return normalized;
+        }
+
+        function createShareCodeBlock(language, codeText) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'eyux-codeblock';
+
+            const header = document.createElement('div');
+            header.className = 'eyux-codeblock-header';
+
+            const lang = document.createElement('span');
+            lang.className = 'eyux-codeblock-lang';
+            lang.textContent = language;
+
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'eyux-codeblock-copy';
+            copyBtn.type = 'button';
+            copyBtn.textContent = 'Copy';
+            copyBtn.addEventListener('click', async () => {
+                try {
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        await navigator.clipboard.writeText(codeText);
+                    } else {
+                        const temp = document.createElement('textarea');
+                        temp.value = codeText;
+                        temp.style.position = 'fixed';
+                        temp.style.opacity = '0';
+                        document.body.appendChild(temp);
+                        temp.focus();
+                        temp.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(temp);
+                    }
+                    copyBtn.textContent = 'Copied';
+                    setTimeout(() => { copyBtn.textContent = 'Copy'; }, 900);
+                } catch (_) {
+                    copyBtn.textContent = 'Failed';
+                    setTimeout(() => { copyBtn.textContent = 'Copy'; }, 900);
+                }
+            });
+
+            header.appendChild(lang);
+            header.appendChild(copyBtn);
+
+            const pre = document.createElement('pre');
+            pre.className = 'eyux-codeblock-body';
+            pre.textContent = codeText;
+
+            wrapper.appendChild(header);
+            wrapper.appendChild(pre);
+
+            return wrapper;
+        }
+
         function setupThemeSwitcher() {
             themeSwitch.className = 'theme-switcher';
             themeSwitch.setAttribute('aria-label', 'Toggle theme');
@@ -386,6 +527,7 @@
                     let interactiveComponentData = null;
                     const interactiveUIRegex = /\[INTERACTIVE_UI\]([\s\S]*?)\[\/INTERACTIVE_UI\]/g;
                     const mermaidRegex = /\[CODEBLOCK:mermaid\]([\s\S]*?)\[\/CODEBLOCK\]/g;
+                    const genericCodeRegex = /\[CODEBLOCK:([^\]]+)\]([\s\S]*?)\[\/CODEBLOCK\]/g;
                     const dataChartRegex = /\[DATA_CHART\]([\s\S]*?)\[\/DATA_CHART\]/g;
 
                     let mainText = msg.text || '';
@@ -425,10 +567,28 @@
                     } else if (msg.fileInfo) {
                         contentContainer.innerHTML = `<div class="placeholder"><span class="placeholder-icon">📄</span> <span class="placeholder-text">[File Sent: ${msg.fileInfo.name}]</span></div>`;
                     } else if (mainText.trim()) {
+                        const codeBlockPlaceholders = [];
                         const textWithDiagrams = mainText.replace(mermaidRegex, (match, diagramCode) => {
                             return `<pre class="mermaid">${diagramCode.trim()}</pre>`;
+                        }).replace(genericCodeRegex, (match, language, codeContent) => {
+                            const normalizedLanguage = normalizeCodeLanguage(language);
+                            if (normalizedLanguage === 'mermaid') return `<pre class="mermaid">${String(codeContent || '').trim()}</pre>`;
+
+                            const placeholderId = `code-${index}-${codeBlockPlaceholders.length}`;
+                            codeBlockPlaceholders.push({
+                                id: placeholderId,
+                                language: normalizedLanguage,
+                                code: String(codeContent || '').replace(/^\n+|\n+$/g, ''),
+                            });
+                            return `<div class="eyux-codeblock-placeholder" data-codeblock-id="${placeholderId}"></div>`;
                         });
                         contentContainer.innerHTML = marked.parse(textWithDiagrams);
+                        codeBlockPlaceholders.forEach(block => {
+                            const placeholder = contentContainer.querySelector(`[data-codeblock-id="${block.id}"]`);
+                            if (!placeholder) return;
+                            const codeBlockElement = createShareCodeBlock(block.language, block.code);
+                            placeholder.replaceWith(codeBlockElement);
+                        });
                     } else if (msg.type === 'image_generating') {
                          contentContainer.innerHTML = `<div class="placeholder"><span class="placeholder-icon">⏳</span> <span class="placeholder-text">[AI is generating an image...]</span></div>`;
                     }
@@ -609,5 +769,6 @@
 
         // --- SCRIPT EXECUTION STARTS HERE ---
         setupThemeSwitcher();
+        injectCodeBlockStyles();
         applyTheme(localStorage.getItem('theme') || 'dark');
         window.onload = fetchAndDisplayChat;</script>
