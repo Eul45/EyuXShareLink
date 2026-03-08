@@ -89,6 +89,225 @@
             document.head.appendChild(style);
         }
 
+        function injectContinuePromptStyles() {
+            if (document.getElementById('eyux-share-continue-style')) return;
+
+            const style = document.createElement('style');
+            style.id = 'eyux-share-continue-style';
+            style.textContent = `
+                .eyux-continue-card {
+                    margin: -6px auto 24px;
+                    padding: 16px;
+                    border-radius: 16px;
+                    border: 1px solid var(--interactive-border);
+                    background: var(--interactive-bg);
+                    max-width: 640px;
+                }
+                .eyux-continue-header {
+                    display: flex;
+                    align-items: flex-start;
+                    justify-content: space-between;
+                    gap: 14px;
+                    margin-bottom: 12px;
+                }
+                .eyux-continue-copy h2 {
+                    margin: 0 0 4px;
+                    font-size: 17px;
+                    color: var(--header-text);
+                }
+                .eyux-continue-copy p {
+                    margin: 0;
+                    font-size: 13px;
+                    line-height: 1.5;
+                    color: var(--text-muted);
+                }
+                .eyux-continue-badge {
+                    flex-shrink: 0;
+                    padding: 5px 10px;
+                    border-radius: 999px;
+                    background: rgba(0, 122, 255, 0.14);
+                    color: var(--link-color);
+                    font-size: 11px;
+                    font-weight: 700;
+                    letter-spacing: 0.04em;
+                    text-transform: uppercase;
+                }
+                .eyux-continue-actions {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                }
+                .eyux-continue-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    min-height: 44px;
+                    padding: 0 16px;
+                    border-radius: 999px;
+                    border: 1px solid var(--interactive-btn-border);
+                    background: var(--interactive-btn-bg);
+                    color: var(--text-color);
+                    font-size: 14px;
+                    font-weight: 600;
+                    text-decoration: none;
+                    cursor: pointer;
+                    transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+                }
+                .eyux-continue-btn:hover {
+                    transform: translateY(-1px);
+                }
+                .eyux-continue-btn-primary {
+                    background: var(--interactive-btn-primary-bg);
+                    border-color: var(--interactive-btn-primary-bg);
+                    color: var(--interactive-btn-primary-text);
+                }
+                .eyux-continue-btn-secondary {
+                    background: transparent;
+                }
+                .eyux-continue-btn svg {
+                    width: 16px;
+                    height: 16px;
+                    fill: currentColor;
+                }
+                .eyux-continue-status {
+                    min-height: 18px;
+                    margin-top: 10px;
+                    font-size: 12px;
+                    line-height: 1.45;
+                    color: var(--text-muted);
+                }
+                .eyux-continue-status a {
+                    color: var(--link-color);
+                    text-decoration: none;
+                    font-weight: 600;
+                }
+                .eyux-continue-status a:hover {
+                    text-decoration: underline;
+                }
+                .eyux-continue-status[data-state="attempt"] {
+                    color: var(--link-color);
+                }
+                .eyux-continue-status[data-state="success"] {
+                    color: #34c759;
+                }
+                .eyux-continue-status[data-state="fallback"] {
+                    color: var(--text-muted);
+                }
+                @media (max-width: 640px) {
+                    .eyux-continue-header {
+                        flex-direction: column;
+                        align-items: flex-start;
+                    }
+                    .eyux-continue-actions {
+                        flex-direction: column;
+                    }
+                    .eyux-continue-btn {
+                        width: 100%;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        function isLikelyDesktopViewer() {
+            const ua = navigator.userAgent || '';
+            const isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
+            const isDesktopPlatform = /Windows|Macintosh|Linux|X11/i.test(ua);
+            return !isMobile && isDesktopPlatform;
+        }
+
+        function buildContinueCard(chatId) {
+            const mainAppUrl = `https://www.eyux.com.et/?continueChatId=${chatId}`;
+            const desktopUrl = `eyux://share?id=${chatId}`;
+            const showDesktopPrompt = isLikelyDesktopViewer();
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'eyux-continue-card';
+
+            const badgeText = showDesktopPrompt ? 'Web + Desktop' : 'Continue';
+            const description = showDesktopPrompt
+                ? 'Open this chat in EyuX Desktop if it is already installed, or continue safely on the web.'
+                : 'Continue this shared conversation in the EyuX web app.';
+
+            wrapper.innerHTML = `
+                <div class="eyux-continue-header">
+                    <div class="eyux-continue-copy">
+                        <h2>Keep going in EyuX</h2>
+                        <p>${description}</p>
+                    </div>
+                    <span class="eyux-continue-badge">${badgeText}</span>
+                </div>
+                <div class="eyux-continue-actions">
+                    ${showDesktopPrompt ? `
+                        <button type="button" class="eyux-continue-btn eyux-continue-btn-secondary" data-role="desktop-open">
+                            <svg viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M1.5 2A1.5 1.5 0 0 0 0 3.5v7A1.5 1.5 0 0 0 1.5 12H6v1H4.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1H10v-1h4.5A1.5 1.5 0 0 0 16 10.5v-7A1.5 1.5 0 0 0 14.5 2h-13zM1 3.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5V9H1V3.5zm0 6.5h14v.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V10z"/>
+                            </svg>
+                            Open in EyuX Desktop
+                        </button>
+                    ` : ''}
+                    <a class="eyux-continue-btn eyux-continue-btn-primary" href="${mainAppUrl}" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 16 16" aria-hidden="true">
+                            <path d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                            <path d="M1 8a.5.5 0 0 1 .5-.5h3.5a.5.5 0 0 1 0 1H1.5A.5.5 0 0 1 1 8z"/>
+                        </svg>
+                        Continue on Web
+                    </a>
+                </div>
+                <div class="eyux-continue-status" data-role="desktop-status"></div>
+            `;
+
+            if (showDesktopPrompt) {
+                const desktopButton = wrapper.querySelector('[data-role="desktop-open"]');
+                const status = wrapper.querySelector('[data-role="desktop-status"]');
+
+                desktopButton.addEventListener('click', () => {
+                    status.dataset.state = 'attempt';
+                    status.textContent = 'Trying to open EyuX Desktop...';
+
+                    let settled = false;
+
+                    const cleanup = () => {
+                        document.removeEventListener('visibilitychange', handleVisibilityChange);
+                        window.removeEventListener('pagehide', cleanup);
+                    };
+
+                    const handleVisibilityChange = () => {
+                        if (document.visibilityState === 'hidden') {
+                            settled = true;
+                            cleanup();
+                            status.dataset.state = 'success';
+                            status.textContent = 'EyuX Desktop should be opening.';
+                        }
+                    };
+
+                    document.addEventListener('visibilitychange', handleVisibilityChange);
+                    window.addEventListener('pagehide', cleanup, { once: true });
+
+                    setTimeout(() => {
+                        if (settled || document.visibilityState === 'hidden') return;
+                        cleanup();
+                        status.dataset.state = 'fallback';
+                        status.innerHTML = 'If nothing opened, EyuX Desktop may not be installed yet. You can keep reading here or <a href="' + mainAppUrl + '" target="_blank" rel="noopener noreferrer">continue on the web</a>.';
+                    }, 1400);
+
+                    const launcher = document.createElement('iframe');
+                    launcher.style.display = 'none';
+                    launcher.setAttribute('aria-hidden', 'true');
+                    launcher.src = desktopUrl;
+                    document.body.appendChild(launcher);
+                    setTimeout(() => {
+                        if (launcher.parentNode) {
+                            launcher.parentNode.removeChild(launcher);
+                        }
+                    }, 1200);
+                });
+            }
+
+            return wrapper;
+        }
+
         function normalizeCodeLanguage(language) {
             const normalized = String(language || '').trim().toLowerCase();
             if (!normalized) return 'plaintext';
@@ -491,21 +710,6 @@
 
                 chatContainer.innerHTML = '';
                 activeCharts = [];
-                      // --- START: NEW CODE TO ADD THE "CONTINUE" BUTTON ---
-            const mainAppUrl = `https://www.eyux.com.et/?continueChatId=${chatId}`;
-           const continueButtonHTML = `
-    <a href="${mainAppUrl}" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; text-decoration: none; background-color: #007AFF; color: white; padding: 12px 20px; border-radius: 25px; font-weight: 600; margin: -10px auto 25px; max-width: 300px; position: relative;">
-        <!-- The "NEW" tag is added here -->
-        <span class="new-tag">NEW</span>
-
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px;">
-            <path d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
-            <path d="M1 8a.5.5 0 0 1 .5-.5h3.5a.5.5 0 0 1 0 1H1.5A.5.5 0 0 1 1 8z"/>
-        </svg>
-        Continue this Conversation
-    </a>
-`;
-            // --- END: NEW CODE ---
 
                 const header = document.createElement('div');
                 header.className = 'chat-header';
@@ -513,9 +717,8 @@
                 header.innerHTML = `<h1>${conversation.title}</h1><p>Shared on ${timestamp}</p> <p class="copy-note">This is a copy of a conversation between EyuX & Anonymous.</p>`;
                 header.appendChild(themeSwitch);
                 chatContainer.appendChild(header);
-                     // Add the new button right after the header
-            chatContainer.insertAdjacentHTML('beforeend', continueButtonHTML);
-                
+                chatContainer.appendChild(buildContinueCard(chatId));
+                 
                 conversation.messages.forEach((msg, index) => {
                     if (msg.type === 'welcome') return;
 
@@ -770,5 +973,6 @@
         // --- SCRIPT EXECUTION STARTS HERE ---
         setupThemeSwitcher();
         injectCodeBlockStyles();
+        injectContinuePromptStyles();
         applyTheme(localStorage.getItem('theme') || 'dark');
         window.onload = fetchAndDisplayChat;</script>
