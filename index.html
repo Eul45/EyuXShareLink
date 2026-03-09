@@ -289,7 +289,7 @@
                         if (settled || document.visibilityState === 'hidden') return;
                         cleanup();
                         status.dataset.state = 'fallback';
-                       status.innerHTML = 'If nothing opened, EyuX Desktop may not be installed yet. You can install it <a href="https://apps.microsoft.com/detail/9nx5dbw6nhw1?hl=en-US&gl=US" target="_blank" rel="noopener noreferrer">from the Microsoft Store</a> or <a href="' + mainAppUrl + '" target="_blank" rel="noopener noreferrer">continue on the web</a>.';
+                    status.innerHTML = 'If nothing opened, EyuX Desktop may not be installed yet. You can install the latest version (starting from v0.1.3.0) <a href="https://apps.microsoft.com/detail/9nx5dbw6nhw1?hl=en-US&gl=US" target="_blank" rel="noopener noreferrer">from the Microsoft Store</a> or <a href="' + mainAppUrl + '" target="_blank" rel="noopener noreferrer">continue on the web</a>.';
                     }, 1400);
 
                     const launcher = document.createElement('iframe');
